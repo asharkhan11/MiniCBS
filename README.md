@@ -68,7 +68,7 @@ spring:
       ddl-auto: update
     show-sql: true
 
-   ```
+   ````
 
 2.2 `variables.yml` for credentials
 
@@ -77,13 +77,13 @@ db:
   username: usernameOfOracleDB
   password: passwordOfOracleDB
 
-```
+````
 
 3. Build and run the project
 
    ```bash
    mvn spring-boot:run
-   ```
+   ````
 
 ## ✅ API Endpoints (Sample)
 
@@ -120,5 +120,4 @@ db:
 ## 📄 Summary
 
 This **Mini Core Banking System (CBS)** backend, built with **Spring Boot**, demonstrates a **role-based banking application** where **Admins** create banks, branches, and staff, while **Managers/Staff** manage customer accounts and transactions. Customers can deposit, withdraw, and track balances, making it a complete simulation of core banking functionalities.
-
-```
+````
