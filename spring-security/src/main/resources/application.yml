@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: spring-security
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/security
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+#  security:
+#    user:
+#      name: ashar
+#      password: root
+#      roles: USER
+
+
+server:
+  port: 9090
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
+jwt:
+  secret-key: "BmoD/XUVKSxA5z2JNhrdiDl/1tF6N5QpLWPgVmO0RAE="
+  issuer: "my-bank"
+  expiry: 600000
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
