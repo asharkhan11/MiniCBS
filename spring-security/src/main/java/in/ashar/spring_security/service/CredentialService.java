@@ -32,7 +32,7 @@ public class CredentialService {
     private HelperClass helperClass;
 
 
-    public CredentialDto createCredential(CredentialDto credentialDto) {
+    public Credential createCredential(CredentialDto credentialDto) {
 
         if(credentialRepository.existsByUsername(credentialDto.getUsername())){
             throw new AlreadyExistsException("username already exists");
@@ -48,9 +48,7 @@ public class CredentialService {
 
         credential.setRoles(roles);
 
-        credentialRepository.save(credential);
-
-        return credentialDto;
+        return credentialRepository.save(credential);
     }
 
     public CredentialDto updateCredential(CredentialDto credentialDto) {

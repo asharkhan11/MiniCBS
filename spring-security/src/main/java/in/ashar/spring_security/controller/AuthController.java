@@ -3,6 +3,7 @@ package in.ashar.spring_security.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import in.ashar.spring_security.dto.AuthResponse;
 import in.ashar.spring_security.dto.CredentialDto;
+import in.ashar.spring_security.entity.Credential;
 import in.ashar.spring_security.exception.UnAuthenticatedException;
 import in.ashar.spring_security.exception.UnAuthorizedException;
 import in.ashar.spring_security.repository.RolesRepository;
@@ -77,7 +78,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<CredentialDto> register(@RequestBody @Valid CredentialDto credentialDto) {
+    public ResponseEntity<Credential> register(@RequestBody @Valid CredentialDto credentialDto) {
         return ResponseEntity.ok(credentialService.createCredential(credentialDto));
 
     }

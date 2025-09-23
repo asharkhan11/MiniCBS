@@ -12,13 +12,25 @@ spring:
     url: jdbc:oracle:thin:@//localhost:1521/xe
     username: ${db.username}
     password: ${db.password}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: oracle.jdbc.OracleDriver
 
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
 
+
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
+jwt:
+  secret-key: "BmoD/XUVKSxA5z2JNhrdiDl/1tF6N5QpLWPgVmO0RAE="
+  issuer: "my-bank"
+  expiry: 600000
 
 eureka:
   client:

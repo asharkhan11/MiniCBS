@@ -14,7 +14,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "branches",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"bank_id", "ifsc_code"}))
+        uniqueConstraints = @UniqueConstraint(columnNames = {"bank_id", "ifsc_code"}),
+        indexes = @Index(name = "index_branch_name", columnList = "name",unique = true))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,7 +30,7 @@ public class Branch {
     @JsonBackReference("bank-branches")
     private Bank bank;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     private String address;

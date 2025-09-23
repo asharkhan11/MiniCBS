@@ -1,11 +1,18 @@
+server:
+  port: 9099
+
+
 spring:
   application:
     name: spring-security
 
+  config:
+    import: "classpath:variables.yml"
+
   datasource:
     url: jdbc:mysql://localhost:3306/security
-    username: root
-    password: root
+    username: ${db.username}
+    password: ${db.password}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -19,9 +26,6 @@ spring:
 #      password: root
 #      roles: USER
 
-
-server:
-  port: 9090
 
 logging:
   level:
