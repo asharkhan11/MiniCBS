@@ -38,7 +38,7 @@ public class Bank {
             columnDefinition = "timestamp default current_timestamp on update current_timestamp")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "bank")
+    @OneToMany(mappedBy = "bank", cascade = CascadeType.ALL)
     @JsonManagedReference("bank-branches")
     private Set<Branch> branches = new HashSet<>();
 

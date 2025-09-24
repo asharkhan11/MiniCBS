@@ -15,15 +15,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/bank")
 public class BankController {
 
-    @Autowired
-    private MapObject mapper;
+
     @Autowired
     private BankService bankService;
 
     @PostMapping
     public ResponseEntity<Response<Bank>> createBank(@RequestBody BankDto bankDto) {
 
-        Bank bank = bankService.createBank(mapper.mapDtoToBank(bankDto));
+        Bank bank = bankService.createBank(bankDto);
 
         Response<Bank> response = Response.<Bank>builder()
                 .status(ResponseStatus.CREATED)

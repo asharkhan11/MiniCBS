@@ -27,7 +27,6 @@ public class MapObject {
     private final ObjectMapper mapper;
     private final SecurityServiceClient securityServiceClient;
     private final BankRepository bankRepository;
-    private final UserRepository userRepository;
 
     public User mapDtoToUser(UserDto userDto) {
 
@@ -43,11 +42,12 @@ public class MapObject {
                 .roles(Set.of(role))
                 .build();
 
-        Credential credential = securityServiceClient.register(cred);
-
         Bank bank = bankRepository.findByName(userDto.getBankName()).orElseThrow(()-> new NotFoundException("Bank not exists with name : "+ userDto.getBankName()));
 
         Branch branch = bank.getBranches().stream().filter(b -> Objects.equals(b.getName(), userDto.getBranchName())).findAny().orElseThrow(() -> new NotFoundException("Branch not exists with name : " + userDto.getBranchName()));
+
+        Credential credential = securityServiceClient.register(cred);
+
 
         UserBankBranch userBankBranch = UserBankBranch.builder()
                 .user(user)
@@ -74,7 +74,6 @@ public class MapObject {
         Branch branch = mapper.convertValue(branchDto, Branch.class); // manager and bank is not mapped, map it manually
 
         String bankName = branchDto.getBankName();
-        int managerId = branchDto.getManagerId();
 
         Bank bank = bankRepository.findByName(bankName).orElseThrow(() -> new NotFoundException("Bank not exists with name : " + bankName));
 
@@ -84,19 +83,9 @@ public class MapObject {
             throw new AlreadyExistsException("Branch already exists with name : "+branchDto.getName());
         }
 
-        if(managerId > 0) {
-            Optional<User> optUser = userRepository.findById(managerId);
+        branch.setBank(bank);
+        bank.getBranches().add(branch);
 
-            if (optUser.isPresent()) {
-
-                User user = optUser.get();
-                int credentialId = user.getCredentialId();
-
-                //find credentials by id and get role . if role is manager then proceed else throw error
-
-            }
-        }
-
-        return null;
+        return branch;
     }
 }

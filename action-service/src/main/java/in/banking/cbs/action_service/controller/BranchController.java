@@ -14,15 +14,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/branch")
 public class BranchController {
 
-    @Autowired
-    private MapObject mapper;
+
     @Autowired
     private BranchService branchService;
 
     @PostMapping
     public ResponseEntity<Response<Branch>> createBranch(@RequestBody BranchDto branchDto) {
 
-        Branch bank = branchService.createBranch(mapper.mapDtoToBranch(branchDto));
+        Branch bank = branchService.createBranch(branchDto);
 
         Response<Branch> response = Response.<Branch>builder()
                 .status(ResponseStatus.CREATED)
