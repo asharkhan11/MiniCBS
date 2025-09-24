@@ -19,14 +19,14 @@ public class BankController {
     @Autowired
     private BankService bankService;
 
-    @PostMapping
+    @PostMapping("/addBank")
     public ResponseEntity<Response<Bank>> createBank(@RequestBody BankDto bankDto) {
 
         Bank bank = bankService.createBank(bankDto);
 
         Response<Bank> response = Response.<Bank>builder()
                 .status(ResponseStatus.CREATED)
-                .message("bank created successfully")
+                .message("Bank created successfully")
                 .data(bank)
                 .build();
 
@@ -35,12 +35,24 @@ public class BankController {
 
     @PutMapping("/{bankId}")
     public ResponseEntity<Response<Bank>> updateBank(@PathVariable int bankId, @RequestBody BankDto bankDto) {
-        return null;
+        Bank updatedBank = bankService.updateBank(bankId,bankDto);
+        Response<Bank> response = Response.<Bank>builder()
+                .status(ResponseStatus.UPDATED)
+                .message("Bank Updated Successfully")
+                .data(updatedBank)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{bankId}")
     public ResponseEntity<Response<Void>> deleteBank(@PathVariable int bankId) {
-        return null;
+        bankService.deleteBank(bankId);
+        Response<Void> response = Response.<Void>builder()
+                .status(ResponseStatus.DELETED)
+                .message("Bank Deleted Successfully")
+                .build();
+        return ResponseEntity.ok(response);
     }
 
 }
