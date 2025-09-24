@@ -1,18 +1,13 @@
 package in.banking.cbs.action_service.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "banks", indexes = @Index(name = "index_bank_name", columnList = "name", unique = true))
@@ -28,7 +23,7 @@ public class Bank {
     private int bankId;
 
     @Column(nullable = false, unique = true)
-    private String name;
+    private String bankName;
 
     private String headOfficeAddress;
     private String contactNumber;
@@ -42,10 +37,4 @@ public class Bank {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "bank", cascade = CascadeType.ALL)
-    @JsonManagedReference("bank-branches")
-    private Set<Branch> branches = new HashSet<>();
-
-    @OneToMany(mappedBy = "bank")
-    private Set<UserBankBranch> userBankBranches = new HashSet<>();
 }

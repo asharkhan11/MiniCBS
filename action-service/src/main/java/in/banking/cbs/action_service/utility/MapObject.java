@@ -44,20 +44,20 @@ public class MapObject {
 
         Bank bank = bankRepository.findByName(userDto.getBankName()).orElseThrow(()-> new NotFoundException("Bank not exists with name : "+ userDto.getBankName()));
 
-        Branch branch = bank.getBranches().stream().filter(b -> Objects.equals(b.getName(), userDto.getBranchName())).findAny().orElseThrow(() -> new NotFoundException("Branch not exists with name : " + userDto.getBranchName()));
+//        Branch branch = bank.getBranches().stream().filter(b -> Objects.equals(b.getName(), userDto.getBranchName())).findAny().orElseThrow(() -> new NotFoundException("Branch not exists with name : " + userDto.getBranchName()));
 
         Credential credential = securityServiceClient.register(cred);
 
 
-        UserBankBranch userBankBranch = UserBankBranch.builder()
-                .user(user)
-                .bank(bank)
-                .branch(branch)
-                .build();
+//        UserBankBranch userBankBranch = UserBankBranch.builder()
+//                .user(user)
+//                .bank(bank)
+//                .branch(branch)
+//                .build();
 
 
         user.setCredentialId(credential.getCredentialId());
-        user.getUserBankBranches().add(userBankBranch);
+//        user.getUserBankBranches().add(userBankBranch);
 
         return user;
     }
@@ -77,14 +77,14 @@ public class MapObject {
 
         Bank bank = bankRepository.findByName(bankName).orElseThrow(() -> new NotFoundException("Bank not exists with name : " + bankName));
 
-        Optional<Branch> optBranch = bank.getBranches().stream().filter(b -> Objects.equals(b.getName(), branchDto.getName())).findAny();
-
-        if(optBranch.isPresent()){
-            throw new AlreadyExistsException("Branch already exists with name : "+branchDto.getName());
-        }
+//        Optional<Branch> optBranch = bank.getBranches().stream().filter(b -> Objects.equals(b.getName(), branchDto.getName())).findAny();
+//
+//        if(optBranch.isPresent()){
+//            throw new AlreadyExistsException("Branch already exists with name : "+branchDto.getName());
+//        }
 
         branch.setBank(bank);
-        bank.getBranches().add(branch);
+//        bank.getBranches().add(branch);
 
         return branch;
     }

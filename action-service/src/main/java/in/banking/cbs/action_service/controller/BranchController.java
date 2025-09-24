@@ -1,6 +1,7 @@
 package in.banking.cbs.action_service.controller;
 
 import in.banking.cbs.action_service.DTO.BranchDto;
+import in.banking.cbs.action_service.DTO.BranchDtoUpdate;
 import in.banking.cbs.action_service.entity.Branch;
 import in.banking.cbs.action_service.message.Response;
 import in.banking.cbs.action_service.service.BranchService;
@@ -33,8 +34,8 @@ public class BranchController {
     }
 
     @PutMapping("/{branchId}")
-    public ResponseEntity<Response<Branch>> updateBranch(@PathVariable int branchId, @RequestBody BranchDto branchDto) {
-        Branch updatedBranch = branchService.updateBranch(branchId, branchDto);
+    public ResponseEntity<Response<Branch>> updateBranch(@PathVariable int branchId, @RequestBody BranchDtoUpdate branchDtoUpdate) {
+        Branch updatedBranch = branchService.updateBranch(branchId, branchDtoUpdate);
 
         Response<Branch> response = Response.<Branch>builder()
                 .status(ResponseStatus.UPDATED)
