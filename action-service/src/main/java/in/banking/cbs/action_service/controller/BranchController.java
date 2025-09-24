@@ -32,15 +32,28 @@ public class BranchController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{bankId}")
-    public ResponseEntity<Response<Branch>> updateBranch(@PathVariable int bankId, @RequestBody BranchDto branchDto) {
-        return null;
+    @PutMapping("/{branchId}")
+    public ResponseEntity<Response<Branch>> updateBranch(@PathVariable int branchId, @RequestBody BranchDto branchDto) {
+        Branch updatedBranch = branchService.updateBranch(branchId, branchDto);
+
+        Response<Branch> response = Response.<Branch>builder()
+                .status(ResponseStatus.UPDATED)
+                .message("Branch updated successfully")
+                .data(updatedBranch)
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{bankId}")
-    public ResponseEntity<Response<Void>> deleteBranch(@PathVariable int bankId) {
-        return null;
+    @DeleteMapping("/{branchId}")
+    public ResponseEntity<Response<Void>> deleteBranch(@PathVariable int branchId) {
+        branchService.deleteBranch(branchId);
+
+        Response<Void> response = Response.<Void>builder()
+                .status(ResponseStatus.DELETED)
+                .message("Branch deleted successfully")
+                .build();
+
+        return ResponseEntity.ok(response);
     }
-    
-    
 }

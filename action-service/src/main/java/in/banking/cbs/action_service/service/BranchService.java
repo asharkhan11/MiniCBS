@@ -1,8 +1,10 @@
 package in.banking.cbs.action_service.service;
 
 import in.banking.cbs.action_service.DTO.BranchDto;
+import in.banking.cbs.action_service.entity.Bank;
 import in.banking.cbs.action_service.entity.Branch;
 import in.banking.cbs.action_service.entity.User;
+import in.banking.cbs.action_service.repository.BankRepository;
 import in.banking.cbs.action_service.repository.BranchRepository;
 import in.banking.cbs.action_service.repository.UserRepository;
 import in.banking.cbs.action_service.utility.MapObject;
@@ -19,6 +21,7 @@ public class BranchService {
     private final MapObject mapper;
     private final BranchRepository branchRepository;
     private final UserRepository userRepository;
+    private final BankRepository bankRepository;
 
     public Branch createBranch(BranchDto branchDto) {
 
@@ -40,5 +43,35 @@ public class BranchService {
         }
 
         return branchRepository.save(branch);
+    }
+
+    public Branch updateBranch(int branchId, BranchDto branchDto) {
+        Branch branch = branchRepository.findById(branchId)
+                .orElseThrow(() -> new RuntimeException("Branch not found with id: " + branchId));
+
+        // update allowed fields
+        branch.setName(branchDto.getName());
+        branch.setAddress(branchDto.getAddress());
+        branch.setCity(branchDto.getCity());
+        branch.setState(branchDto.getState());
+        branch.setIfscCode(branchDto.getIfscCode());
+        branch.setContactNumber(branchDto.getContactNumber());
+        branch.setManagerId(branchDto.getManagerId());
+
+        // update bank if provided
+        if (branchDto.getBankName() != null) {
+            Bank bank = bankRepository.findByName(branchDto.getBankName())
+                    .orElseThrow(() -> new RuntimeException("Bank not found: " + branchDto.getBankName()));
+            branch.setBank(bank);
+        }
+
+        return branchRepository.save(branch);
+    }
+
+    public void deleteBranch(int branchId) {
+        Branch branch = branchRepository.findById(branchId)
+                .orElseThrow(() -> new RuntimeException("Branch not found with id: " + branchId));
+
+        branchRepository.delete(branch);
     }
 }
