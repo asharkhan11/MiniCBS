@@ -1,6 +1,8 @@
 package in.banking.cbs.action_service.controller;
 
 import in.banking.cbs.action_service.DTO.UserDto;
+import in.banking.cbs.action_service.DTO.UserDtoUpdateBasic;
+import in.banking.cbs.action_service.DTO.UserDtoUpdateCredentials;
 import in.banking.cbs.action_service.entity.User;
 import in.banking.cbs.action_service.message.Response;
 import in.banking.cbs.action_service.service.UserService;
@@ -33,17 +35,49 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<Response<User>> updateUser(@PathVariable int userId, @RequestBody UserDto userDto){
+    @PutMapping("/basic-details/{userId}")
+    public ResponseEntity<Response<User>> updateUserBasicDetails(@PathVariable int userId, @RequestBody UserDtoUpdateBasic userDto){
 
+        User user = userService.updateUserBasicDetailsById(userId, userDto);
 
+        Response<User> response = Response.<User>builder()
+                .status(ResponseStatus.UPDATED)
+                .message("user's basic details updated successfully")
+                .data(user)
+                .build();
 
-        return null;
+        return ResponseEntity.ok(response);
     }
+
+
+
+    @PutMapping("/credentials/{userId}")
+    public ResponseEntity<Response<User>> updateUserCredentials(@PathVariable int userId, @RequestBody UserDtoUpdateCredentials userDto){
+
+        User user = userService.updateUserBasicDetailsById(userId, userDto);
+
+        Response<User> response = Response.<User>builder()
+                .status(ResponseStatus.UPDATED)
+                .message("user's credentials updated successfully")
+                .data(user)
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Response<Void>> deleteUser(@PathVariable int userId){
-        return null;
+
+        userService.deleteUserById(userId);
+
+        Response<Void> response = Response.<Void>builder()
+                .status(ResponseStatus.UPDATED)
+                .message("user deleted successfully")
+                .build();
+
+
+        return ResponseEntity.ok(response);
     }
 
 }
