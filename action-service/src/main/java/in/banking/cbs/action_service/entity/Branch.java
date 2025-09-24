@@ -1,17 +1,11 @@
 package in.banking.cbs.action_service.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "branches",
@@ -28,13 +22,8 @@ public class Branch {
     @SequenceGenerator(name = "branch_seq", sequenceName = "branch_seq", allocationSize = 1)
     private int branchId;
 
-    @ManyToOne
-    @JoinColumn(name = "bank_id", nullable = false)
-    @JsonBackReference("bank-branches")
-    private Bank bank;
-
     @Column(nullable = false, unique = true)
-    private String name;
+    private String branchName;
 
     private String address;
     private String city;
@@ -54,7 +43,10 @@ public class Branch {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "branch")
-    @Builder.Default
-    private Set<UserBankBranch> userBankBranches = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "bank_id", nullable = false)
+    private Bank bank;
+
+
 }

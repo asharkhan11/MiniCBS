@@ -1,6 +1,7 @@
 package in.banking.cbs.action_service.service;
 
 import in.banking.cbs.action_service.DTO.BranchDto;
+import in.banking.cbs.action_service.DTO.BranchDtoUpdate;
 import in.banking.cbs.action_service.DTO.Credential;
 import in.banking.cbs.action_service.DTO.Roles;
 import in.banking.cbs.action_service.client.SecurityServiceClient;
@@ -8,14 +9,13 @@ import in.banking.cbs.action_service.entity.Bank;
 import in.banking.cbs.action_service.entity.Branch;
 import in.banking.cbs.action_service.entity.User;
 import in.banking.cbs.action_service.exception.InvalidDataException;
+import in.banking.cbs.action_service.exception.NotFoundException;
 import in.banking.cbs.action_service.repository.BankRepository;
 import in.banking.cbs.action_service.repository.BranchRepository;
 import in.banking.cbs.action_service.repository.UserRepository;
 import in.banking.cbs.action_service.utility.MapObject;
 import in.banking.cbs.action_service.utility.UserRole;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -32,13 +32,35 @@ public class BranchService {
 
     public Branch createBranch(BranchDto branchDto) {
 
-        Branch branch = mapper.mapDtoToBranch(branchDto);
+//        Branch branch = mapper.mapDtoToBranch(branchDto);
+
+
+        String bankName = branchDto.getBankName();
+
+        Bank bank = bankRepository.findByName(bankName).orElseThrow(() -> new NotFoundException("Bank not exists with name : " + bankName));
+
+        System.out.println("bank :"+bank);
+
+        Branch branch = new Branch();
+
+        branch.setBank(bank);
+        branch.setCity(branchDto.getCity());
+        branch.setAddress(branchDto.getAddress());
+        branch.setState(branchDto.getAddress());
+        branch.setContactNumber(branchDto.getContactNumber());
+        branch.setIfscCode(branchDto.getIfscCode());
+        branch.setBranchName(branchDto.getName());
+
         int managerId = branchDto.getManagerId();
 
-        if(managerId > 0) {
+        if (managerId > 0) {
             Optional<User> optUser = userRepository.findById(managerId);
 
+            System.out.println("inside if");
+
             if (optUser.isPresent()) {
+
+
 
                 User user = optUser.get();
                 int credentialId = user.getCredentialId();
@@ -48,36 +70,32 @@ public class BranchService {
 
                 Optional<Roles> optRole = credential.getRoles().stream().filter(r -> r.getRole().equals(UserRole.MANAGER.name())).findAny();
 
-                if(optRole.isEmpty()){
-                    throw new InvalidDataException("Invalid credential id : "+ credentialId);
+                if (optRole.isEmpty()) {
+                    throw new InvalidDataException("Invalid credential id : " + credentialId);
                 }
 
                 branch.setManagerId(user.getUserId());
             }
         }
 
-        return branchRepository.save(branch);
+        System.out.println("before save");
+
+//        bank.getBranches().add(branch);
+        branchRepository.save(branch);
+        return branch;
     }
 
-    public Branch updateBranch(int branchId, BranchDto branchDto) {
+    public Branch updateBranch(int branchId, BranchDtoUpdate branchDtoUpdate) {
         Branch branch = branchRepository.findById(branchId)
                 .orElseThrow(() -> new RuntimeException("Branch not found with id: " + branchId));
 
         // update allowed fields
-        branch.setName(branchDto.getName());
-        branch.setAddress(branchDto.getAddress());
-        branch.setCity(branchDto.getCity());
-        branch.setState(branchDto.getState());
-        branch.setIfscCode(branchDto.getIfscCode());
-        branch.setContactNumber(branchDto.getContactNumber());
-        branch.setManagerId(branchDto.getManagerId());
-
-        // update bank if provided
-        if (branchDto.getBankName() != null) {
-            Bank bank = bankRepository.findByName(branchDto.getBankName())
-                    .orElseThrow(() -> new RuntimeException("Bank not found: " + branchDto.getBankName()));
-            branch.setBank(bank);
-        }
+        branch.setAddress(branchDtoUpdate.getAddress());
+        branch.setCity(branchDtoUpdate.getCity());
+        branch.setState(branchDtoUpdate.getState());
+        branch.setIfscCode(branchDtoUpdate.getIfscCode());
+        branch.setContactNumber(branchDtoUpdate.getContactNumber());
+        branch.setManagerId(branchDtoUpdate.getManagerId());
 
         return branchRepository.save(branch);
     }
