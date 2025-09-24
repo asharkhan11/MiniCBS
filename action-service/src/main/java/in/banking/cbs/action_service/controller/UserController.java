@@ -54,7 +54,7 @@ public class UserController {
     @PutMapping("/credentials/{userId}")
     public ResponseEntity<Response<User>> updateUserCredentials(@PathVariable int userId, @RequestBody UserDtoUpdateCredentials userDto){
 
-        User user = userService.updateUserBasicDetailsById(userId, userDto);
+        User user = userService.updateUserCredentialsById(userId, userDto);
 
         Response<User> response = Response.<User>builder()
                 .status(ResponseStatus.UPDATED)

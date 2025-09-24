@@ -15,8 +15,13 @@ public class CredentialController {
     private CredentialService credentialService;
 
     @PutMapping
-    public ResponseEntity<CredentialDto> updateCredential(CredentialDto credentialDto){
+    public ResponseEntity<CredentialDto> updateCredential(@RequestBody  CredentialDto credentialDto){
         return ResponseEntity.ok(credentialService.updateCredential(credentialDto));
+    }
+
+    @PutMapping("/{credentialId}")
+    public ResponseEntity<Credential> updateCredentialById(@PathVariable int credentialId, @RequestBody Credential credential){
+        return ResponseEntity.ok(credentialService.updateCredentialById(credentialId, credential));
     }
 
     @DeleteMapping

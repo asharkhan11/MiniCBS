@@ -75,6 +75,25 @@ public class CredentialService {
     }
 
 
+    public Credential updateCredentialById(int credentialId, Credential credential) {
+
+        Credential existingCredential = credentialRepository.findById(credentialId).orElseThrow(() -> new NotFoundException("credentials not found"));
+
+        if(credentialRepository.existsByUsername(credential.getUsername())){
+            throw new AlreadyExistsException("Username already exists");
+        }
+
+        existingCredential.setUsername(credential.getUsername());
+
+        existingCredential.setPassword(passwordEncoder.encode(credential.getPassword()));
+
+        existingCredential.setRoles(credential.getRoles());
+
+        return credentialRepository.save(existingCredential);
+
+    }
+
+
     public void deleteCredential() {
         String username = SecurityHelper.getCurrentUser();
         credentialRepository.deleteByUsername(username);
@@ -112,4 +131,6 @@ public class CredentialService {
         return credential;
 
     }
+
+
 }
