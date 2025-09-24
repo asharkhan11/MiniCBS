@@ -29,12 +29,22 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponse> notFoundException(NotFoundException e){
+    public ResponseEntity<ErrorResponse> notFoundExceptionHandler(NotFoundException e){
         ErrorResponse response = new ErrorResponse();
         response.setError("NOT FOUND");
         response.setDetails(e.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+
+    @ExceptionHandler(InvalidDataException.class)
+    public ResponseEntity<ErrorResponse> invalidDataExceptionHandler(InvalidDataException e){
+        ErrorResponse response = new ErrorResponse();
+        response.setError("INVALID");
+        response.setDetails(e.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
     }
 
 
