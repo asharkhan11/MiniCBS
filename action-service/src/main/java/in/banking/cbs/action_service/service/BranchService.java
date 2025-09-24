@@ -37,7 +37,7 @@ public class BranchService {
 
         String bankName = branchDto.getBankName();
 
-        Bank bank = bankRepository.findByName(bankName).orElseThrow(() -> new NotFoundException("Bank not exists with name : " + bankName));
+        Bank bank = bankRepository.findByBankName(bankName).orElseThrow(() -> new NotFoundException("Bank not exists with name : " + bankName));
 
         System.out.println("bank :"+bank);
 
