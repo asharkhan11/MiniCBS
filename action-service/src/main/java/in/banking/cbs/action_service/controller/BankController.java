@@ -19,7 +19,7 @@ public class BankController {
     @Autowired
     private BankService bankService;
 
-    @PostMapping("/addBank")
+    @PostMapping
     public ResponseEntity<Response<Bank>> createBank(@RequestBody BankDto bankDto) {
 
         Bank bank = bankService.createBank(bankDto);

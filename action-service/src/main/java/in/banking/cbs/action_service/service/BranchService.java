@@ -49,7 +49,7 @@ public class BranchService {
         branch.setState(branchDto.getAddress());
         branch.setContactNumber(branchDto.getContactNumber());
         branch.setIfscCode(branchDto.getIfscCode());
-        branch.setBranchName(branchDto.getName());
+        branch.setBranchName(branchDto.getBranchName());
 
         int managerId = branchDto.getManagerId();
 

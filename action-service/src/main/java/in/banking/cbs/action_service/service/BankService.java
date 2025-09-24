@@ -28,13 +28,13 @@ public class BankService {
     }
 
     public Bank updateBank(int bankId,BankDto bankDto) {
-        Optional<Bank> byName = bankRepository.findByBankName(bankDto.getName());
+        Optional<Bank> byName = bankRepository.findByBankName(bankDto.getBankName());
         if(byName.isPresent()){
-            throw new RuntimeException("Bank name '"+ bankDto.getName()+"' already exits!");
+            throw new RuntimeException("Bank name '"+ bankDto.getBankName()+"' already exits!");
         }
         Bank bank = bankRepository.findById(bankId).orElseThrow(() -> new NotFoundException("Bank Not Found With Id" + bankId));
         bank.setHeadOfficeAddress(bankDto.getHeadOfficeAddress());
-        bank.setBankName(bankDto.getName());
+        bank.setBankName(bankDto.getBankName());
         bank.setContactNumber(bankDto.getContactNumber());
         bank.setEmail(bankDto.getEmail());
         return bankRepository.save(bank);

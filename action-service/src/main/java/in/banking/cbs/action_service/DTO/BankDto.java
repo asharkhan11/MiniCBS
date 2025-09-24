@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class BankDto {
 
-    private String name;
+    private String bankName;
     private String headOfficeAddress;
     private String contactNumber;
     private String email;
