@@ -4,9 +4,11 @@ import in.banking.cbs.action_service.DTO.BranchDto;
 import in.banking.cbs.action_service.DTO.Credential;
 import in.banking.cbs.action_service.DTO.Roles;
 import in.banking.cbs.action_service.client.SecurityServiceClient;
+import in.banking.cbs.action_service.entity.Bank;
 import in.banking.cbs.action_service.entity.Branch;
 import in.banking.cbs.action_service.entity.User;
 import in.banking.cbs.action_service.exception.InvalidDataException;
+import in.banking.cbs.action_service.repository.BankRepository;
 import in.banking.cbs.action_service.repository.BranchRepository;
 import in.banking.cbs.action_service.repository.UserRepository;
 import in.banking.cbs.action_service.utility.MapObject;
@@ -26,6 +28,7 @@ public class BranchService {
     private final BranchRepository branchRepository;
     private final UserRepository userRepository;
     private final SecurityServiceClient securityServiceClient;
+    private final BankRepository bankRepository;
 
     public Branch createBranch(BranchDto branchDto) {
 
