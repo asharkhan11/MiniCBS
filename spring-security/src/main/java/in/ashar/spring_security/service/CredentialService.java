@@ -97,4 +97,19 @@ public class CredentialService {
         return credentialDto;
 
     }
+
+    public Credential getCredentialById(int credentialId) {
+
+
+        Credential credential = credentialRepository.findById(credentialId).orElseThrow(()-> new NotFoundException("Credentials not found with id : "+ credentialId));
+
+
+//        CredentialDto credentialDto = new CredentialDto();
+//        credentialDto.setUsername(credential.getUsername());
+//        credentialDto.setPassword(credential.getPassword());
+//        credentialDto.setRoleNames(credential.getRoles().stream().map(Roles::getRole).toList());
+
+        return credential;
+
+    }
 }

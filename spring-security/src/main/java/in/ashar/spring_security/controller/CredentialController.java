@@ -1,6 +1,7 @@
 package in.ashar.spring_security.controller;
 
 import in.ashar.spring_security.dto.CredentialDto;
+import in.ashar.spring_security.entity.Credential;
 import in.ashar.spring_security.service.CredentialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,12 @@ public class CredentialController {
     @GetMapping
     public ResponseEntity<CredentialDto> getCredential(){
         return ResponseEntity.ok(credentialService.getCredentialByUsername());
+    }
+
+
+    @GetMapping("/{credentialId}")
+    public ResponseEntity<Credential> getCredentialById(@PathVariable int credentialId){
+        return ResponseEntity.ok(credentialService.getCredentialById(credentialId));
     }
 
 }

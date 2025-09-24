@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,8 +21,10 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class User {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+    @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
     private int userId;
 
     @Column(nullable = false, length = 100)
@@ -31,13 +34,13 @@ public class User {
     private LocalDate dob;
 
     @Column(nullable = false, unique = true)
-    private int credentialId; // email, password and roles will be stored here
+    private int credentialId; // FK reference to credentials table ideally
 
     private String phone;
     private String address;
 
-    @Column(nullable = false, updatable = false,
-            columnDefinition = "timestamp default current_timestamp")
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime joinedOn;
 
     @Enumerated(EnumType.STRING)
