@@ -6,18 +6,11 @@ import in.banking.cbs.action_service.client.SecurityServiceClient;
 import in.banking.cbs.action_service.entity.Bank;
 import in.banking.cbs.action_service.entity.Branch;
 import in.banking.cbs.action_service.entity.User;
-import in.banking.cbs.action_service.entity.UserBankBranch;
-import in.banking.cbs.action_service.exception.AlreadyExistsException;
 import in.banking.cbs.action_service.exception.NotFoundException;
 import in.banking.cbs.action_service.repository.BankRepository;
-import in.banking.cbs.action_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 @Component
@@ -42,7 +35,7 @@ public class MapObject {
                 .roles(Set.of(role))
                 .build();
 
-        Bank bank = bankRepository.findByName(userDto.getBankName()).orElseThrow(()-> new NotFoundException("Bank not exists with name : "+ userDto.getBankName()));
+        Bank bank = bankRepository.findByBankName(userDto.getBankName()).orElseThrow(()-> new NotFoundException("Bank not exists with name : "+ userDto.getBankName()));
 
 //        Branch branch = bank.getBranches().stream().filter(b -> Objects.equals(b.getName(), userDto.getBranchName())).findAny().orElseThrow(() -> new NotFoundException("Branch not exists with name : " + userDto.getBranchName()));
 
@@ -75,7 +68,7 @@ public class MapObject {
 
         String bankName = branchDto.getBankName();
 
-        Bank bank = bankRepository.findByName(bankName).orElseThrow(() -> new NotFoundException("Bank not exists with name : " + bankName));
+        Bank bank = bankRepository.findByBankName(bankName).orElseThrow(() -> new NotFoundException("Bank not exists with name : " + bankName));
 
 //        Optional<Branch> optBranch = bank.getBranches().stream().filter(b -> Objects.equals(b.getName(), branchDto.getName())).findAny();
 //
