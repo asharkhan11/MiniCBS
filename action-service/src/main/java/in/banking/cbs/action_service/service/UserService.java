@@ -1,14 +1,12 @@
 package in.banking.cbs.action_service.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import in.banking.cbs.action_service.DTO.Credential;
-import in.banking.cbs.action_service.DTO.Roles;
-import in.banking.cbs.action_service.DTO.UserDtoUpdateBasic;
-import in.banking.cbs.action_service.DTO.UserDtoUpdateCredentials;
+import in.banking.cbs.action_service.DTO.*;
 import in.banking.cbs.action_service.client.SecurityServiceClient;
 import in.banking.cbs.action_service.entity.User;
 import in.banking.cbs.action_service.exception.NotFoundException;
 import in.banking.cbs.action_service.repository.UserRepository;
+import in.banking.cbs.action_service.utility.MapObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +17,12 @@ import java.util.Set;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final ObjectMapper mapper;
+    private final MapObject mapper;
     private final SecurityServiceClient securityServiceClient;
 
 
-    public User createUser(User user) {
+    public User createUser(UserDto userDto) {
+        User user = mapper.mapDtoToUser(userDto);
         return userRepository.save(user);
     }
 

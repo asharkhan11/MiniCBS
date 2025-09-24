@@ -10,6 +10,7 @@ import in.ashar.spring_security.repository.CredentialRepository;
 import in.ashar.spring_security.repository.RolesRepository;
 import in.ashar.spring_security.security.SecurityHelper;
 import in.ashar.spring_security.utility.HelperClass;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,26 @@ public class CredentialService {
         credential.setRoles(roles);
 
         return credentialRepository.save(credential);
+    }
+
+
+    public Credential createCredentialWithEntity(@Valid Credential cred) {
+
+        if(credentialRepository.existsByUsername(cred.getUsername())){
+            throw new AlreadyExistsException("username already exists");
+        }
+
+        List<String> roleNames = cred.getRoles().stream().map(Roles::getRole).toList();
+        Set<Roles> roles = helperClass.getRolesFromName(roleNames);
+
+        Credential credential = new Credential();
+        credential.setUsername(cred.getUsername());
+        credential.setPassword(passwordEncoder.encode(cred.getPassword()));
+
+        credential.setRoles(roles);
+
+        return credentialRepository.save(credential);
+
     }
 
     public CredentialDto updateCredential(CredentialDto credentialDto) {
@@ -131,6 +152,7 @@ public class CredentialService {
         return credential;
 
     }
+
 
 
 }
