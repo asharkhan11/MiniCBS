@@ -8,6 +8,7 @@ import in.banking.cbs.action_service.client.SecurityServiceClient;
 import in.banking.cbs.action_service.entity.Bank;
 import in.banking.cbs.action_service.entity.Branch;
 import in.banking.cbs.action_service.entity.User;
+import in.banking.cbs.action_service.exception.AlreadyExistsException;
 import in.banking.cbs.action_service.exception.InvalidDataException;
 import in.banking.cbs.action_service.exception.NotFoundException;
 import in.banking.cbs.action_service.repository.BankRepository;
@@ -32,14 +33,13 @@ public class BranchService {
 
     public Branch createBranch(BranchDto branchDto) {
 
-//        Branch branch = mapper.mapDtoToBranch(branchDto);
-
-
         String bankName = branchDto.getBankName();
+        String branchName = branchDto.getBranchName();
+        String ifscCode = branchDto.getIfscCode();
 
         Bank bank = bankRepository.findByBankName(bankName).orElseThrow(() -> new NotFoundException("Bank not exists with name : " + bankName));
 
-        System.out.println("bank :"+bank);
+        branchRepository.findByBranchNameOrIfscCode(branchName, ifscCode).ifPresent( b -> {throw new AlreadyExistsException("Branch Already exists with Name : %S or IFSC Code : %s ".formatted(branchName,ifscCode));});
 
         Branch branch = new Branch();
 
@@ -56,11 +56,7 @@ public class BranchService {
         if (managerId > 0) {
             Optional<User> optUser = userRepository.findById(managerId);
 
-            System.out.println("inside if");
-
             if (optUser.isPresent()) {
-
-
 
                 User user = optUser.get();
                 int credentialId = user.getCredentialId();
@@ -78,9 +74,6 @@ public class BranchService {
             }
         }
 
-        System.out.println("before save");
-
-//        bank.getBranches().add(branch);
         branchRepository.save(branch);
         return branch;
     }

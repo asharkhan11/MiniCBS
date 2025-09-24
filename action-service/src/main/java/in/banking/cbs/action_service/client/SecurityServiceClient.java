@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(name = "spring-security")
 public interface SecurityServiceClient {
 
-    @PostMapping("/auth/register")
+    @PostMapping("/auth/register-user")
     Credential register(@RequestBody Credential credential);
 
     @GetMapping("credential/{credentialId}")

@@ -38,6 +38,16 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> alreadyExistsExceptionHandler(AlreadyExistsException e){
+        ErrorResponse response = new ErrorResponse();
+        response.setError("ALREADY EXISTS");
+        response.setDetails(e.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+
     @ExceptionHandler(InvalidDataException.class)
     public ResponseEntity<ErrorResponse> invalidDataExceptionHandler(InvalidDataException e){
         ErrorResponse response = new ErrorResponse();
@@ -45,6 +55,26 @@ public class GlobalExceptionHandler {
         response.setDetails(e.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+
+    @ExceptionHandler(ServerServiceException.class)
+    public ResponseEntity<ErrorResponse> serverServiceExceptionHandler(ServerServiceException e){
+        ErrorResponse response = new ErrorResponse();
+        response.setError("MICROSERVICE EXCEPTION");
+        response.setDetails(e.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> globalExceptionHandler(Exception e){
+        ErrorResponse response = new ErrorResponse();
+        response.setError("INTERNAL SERVER ERROR");
+        response.setDetails(e.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 

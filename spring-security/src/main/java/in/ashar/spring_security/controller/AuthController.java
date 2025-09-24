@@ -83,6 +83,12 @@ public class AuthController {
 
     }
 
+    @PostMapping("/register-user")
+    public ResponseEntity<Credential> registerWithEntity(@RequestBody @Valid Credential credential) {
+        return ResponseEntity.ok(credentialService.createCredentialWithEntity(credential));
+
+    }
+
 
     @GetMapping("/validate")
     public boolean validateToken(@RequestHeader("token") String token){
