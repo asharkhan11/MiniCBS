@@ -1,12 +1,13 @@
 package in.banking.cbs.action_service.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -15,14 +16,16 @@ import java.util.Set;
 @Entity
 @Table(name = "branches",
         uniqueConstraints = @UniqueConstraint(columnNames = {"bank_id", "ifsc_code"}),
-        indexes = @Index(name = "index_branch_name", columnList = "name",unique = true))
+        indexes = @Index(name = "index_branch_name", columnList = "name", unique = true))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Branch {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "branch_seq")
+    @SequenceGenerator(name = "branch_seq", sequenceName = "branch_seq", allocationSize = 1)
     private int branchId;
 
     @ManyToOne
@@ -43,12 +46,12 @@ public class Branch {
     private String contactNumber;
     private int managerId; // optional, not enforced as FK
 
-    @Column(nullable = false, updatable = false,
-            columnDefinition = "timestamp default current_timestamp")
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Column(nullable = false,
-            columnDefinition = "timestamp default current_timestamp on update current_timestamp")
+    @Column(nullable = false)
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "branch")
