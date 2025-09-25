@@ -4,6 +4,7 @@ import in.banking.cbs.query_service.entity.Bank;
 import in.banking.cbs.query_service.message.Response;
 import in.banking.cbs.query_service.service.BankService;
 import in.banking.cbs.query_service.utility.ResponseStatus;
+import jakarta.ws.rs.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,6 +53,19 @@ public class BankController {
         Response<List<Bank>> response = Response.<List<Bank>>builder()
                 .status(ResponseStatus.FETCHED)
                 .message("Banks fetched successfully")
+                .data(banks)
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/search/address/{keyword}")
+    public ResponseEntity<Response<List<Bank>>> getBanksByAddressKeyword(@PathVariable String keyword) {
+        List<Bank> banks = bankService.getBanksByAddressKeyword(keyword);
+
+        Response<List<Bank>> response = Response.<List<Bank>>builder()
+                .status(ResponseStatus.FETCHED)
+                .message("Banks fetched successfully by keyword")
                 .data(banks)
                 .build();
 
