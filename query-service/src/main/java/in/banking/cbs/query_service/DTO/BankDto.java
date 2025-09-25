@@ -1,4 +1,4 @@
-package in.banking.cbs.action_service.DTO;
+package in.banking.cbs.query_service.DTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
