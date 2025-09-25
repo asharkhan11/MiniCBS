@@ -36,7 +36,7 @@ public class BankService {
     public List<Bank> getBanksByAddressKeyword(String keyword) {
         List<Bank> banks = bankRepository.findByHeadOfficeAddressContainingIgnoreCase(keyword);
         if (banks.isEmpty()) {
-            throw new RuntimeException("No banks found containing keyword in address: " + keyword);
+            throw new NotFoundException("No banks found containing keyword in address: " + keyword);
         }
         return banks;
     }
