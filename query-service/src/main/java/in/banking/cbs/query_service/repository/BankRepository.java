@@ -17,4 +17,6 @@ public interface BankRepository extends JpaRepository<Bank,Integer> {
 
     List<Bank> findByHeadOfficeAddressIgnoreCase(String headOfficeAddress);
 
+    List<Bank> findByHeadOfficeAddressContainingIgnoreCase(String keyword);
+
 }

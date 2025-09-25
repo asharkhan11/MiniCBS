@@ -22,15 +22,22 @@ public class BankService {
 
     public Bank getBankByEmail(String email) {
         return bankRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Bank not found with email: " + email));
+                .orElseThrow(() -> new NotFoundException("Bank not found with email: " + email));
     }
 
     public List<Bank> getBanksByAddress(String headOfficeAddress) {
         List<Bank> banks = bankRepository.findByHeadOfficeAddressIgnoreCase(headOfficeAddress);
         if(banks.isEmpty()) {
-            throw new RuntimeException("No banks found at address: " + headOfficeAddress);
+            throw new NotFoundException ("No banks found at address: " + headOfficeAddress);
         }
         return banks;
     }
 
+    public List<Bank> getBanksByAddressKeyword(String keyword) {
+        List<Bank> banks = bankRepository.findByHeadOfficeAddressContainingIgnoreCase(keyword);
+        if (banks.isEmpty()) {
+            throw new NotFoundException("No banks found containing keyword in address: " + keyword);
+        }
+        return banks;
+    }
 }
