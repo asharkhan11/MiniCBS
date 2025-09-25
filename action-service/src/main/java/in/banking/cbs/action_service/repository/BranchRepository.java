@@ -14,4 +14,6 @@ public interface BranchRepository extends JpaRepository<Branch, Integer> {
     Optional<Branch> findByIfscCode(String ifscCode);
 
     Optional<Branch> findByBranchNameOrIfscCode(String branchName, String ifscCode);
+
+    Optional<Branch> findByBranchNameAndBankBankName(String branchName, String bankName);
 }

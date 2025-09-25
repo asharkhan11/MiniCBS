@@ -8,6 +8,7 @@ import in.banking.cbs.action_service.entity.Branch;
 import in.banking.cbs.action_service.entity.User;
 import in.banking.cbs.action_service.exception.NotFoundException;
 import in.banking.cbs.action_service.repository.BankRepository;
+import in.banking.cbs.action_service.repository.BranchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +21,13 @@ public class MapObject {
     private final ObjectMapper mapper;
     private final SecurityServiceClient securityServiceClient;
     private final BankRepository bankRepository;
+    private final BranchRepository branchRepository;
 
     public User mapDtoToUser(UserDto userDto) {
+        String bankName = userDto.getBankName();
+        String branchName = userDto.getBranchName();
 
-        User user = mapper.convertValue(userDto, User.class); // UserBankBranch, email, password and role not mapped, map it manually
+        User user = mapper.convertValue(userDto, User.class); // email, password and role not mapped, map it manually
 
         Roles role = Roles.builder()
                 .role(userDto.getRole().name())
@@ -35,9 +39,9 @@ public class MapObject {
                 .roles(Set.of(role))
                 .build();
 
-        Bank bank = bankRepository.findByBankName(userDto.getBankName()).orElseThrow(()-> new NotFoundException("Bank not exists with name : "+ userDto.getBankName()));
+        Bank bank = bankRepository.findByBankName(bankName).orElseThrow(()-> new NotFoundException("Bank not exists with name : "+ bankName));
 
-//        Branch branch = bank.getBranches().stream().filter(b -> Objects.equals(b.getName(), userDto.getBranchName())).findAny().orElseThrow(() -> new NotFoundException("Branch not exists with name : " + userDto.getBranchName()));
+        Branch branch = branchRepository.findByBranchNameAndBankBankName(branchName, bankName).orElseThrow(()-> new NotFoundException("Branch not exists with name : "+ branchName));
 
         Credential credential = securityServiceClient.register(cred);
 
@@ -50,7 +54,7 @@ public class MapObject {
 
 
         user.setCredentialId(credential.getCredentialId());
-//        user.getUserBankBranches().add(userBankBranch);
+        user.getBranches().add(branch);
 
         return user;
     }
