@@ -1,7 +1,6 @@
 package in.banking.cbs.query_service.utility;
 
 
-import in.banking.cbs.query_service.utility.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

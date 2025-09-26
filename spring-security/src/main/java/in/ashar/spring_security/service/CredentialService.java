@@ -121,20 +121,27 @@ public class CredentialService {
     }
 
 
-    public CredentialDto getCredentialByUsername() {
+    public void deleteAllCredentialsByIds(List<Integer> credentialIds) {
+
+        credentialRepository.deleteAllById(credentialIds);
+
+    }
+
+
+    public Credential getCredentialByUsername() {
 
 
         String username = SecurityHelper.getCurrentUser();
 
         Credential credential = credentialRepository.findByUsername(username).orElseThrow(()-> new NotFoundException("Credentials not found"));
 
+//
+//        CredentialDto credentialDto = new CredentialDto();
+//        credentialDto.setUsername(username);
+//        credentialDto.setPassword(credential.getPassword());
+//        credentialDto.setRoleNames(credential.getRoles().stream().map(Roles::getRole).toList());
 
-        CredentialDto credentialDto = new CredentialDto();
-        credentialDto.setUsername(username);
-        credentialDto.setPassword(credential.getPassword());
-        credentialDto.setRoleNames(credential.getRoles().stream().map(Roles::getRole).toList());
-
-        return credentialDto;
+        return credential;
 
     }
 
@@ -152,7 +159,5 @@ public class CredentialService {
         return credential;
 
     }
-
-
 
 }

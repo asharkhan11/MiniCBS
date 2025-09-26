@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/credential")
 public class CredentialController {
@@ -25,13 +27,19 @@ public class CredentialController {
     }
 
     @DeleteMapping
-    public ResponseEntity<CredentialDto> deleteCredential(){
+    public ResponseEntity<Void> deleteCredential(){
         credentialService.deleteCredential();
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/ids")
+    public ResponseEntity<Void> deleteAllCredentialsByIds(@RequestBody List<Integer> credentialIds){
+        credentialService.deleteAllCredentialsByIds(credentialIds);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping
-    public ResponseEntity<CredentialDto> getCredential(){
+    public ResponseEntity<Credential> getCredential(){
         return ResponseEntity.ok(credentialService.getCredentialByUsername());
     }
 

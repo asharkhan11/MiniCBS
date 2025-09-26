@@ -2,6 +2,7 @@ package in.ashar.spring_security.controller;
 
 import in.ashar.spring_security.dto.RoleDto;
 import in.ashar.spring_security.dto.UpdateRoleDto;
+import in.ashar.spring_security.entity.Roles;
 import in.ashar.spring_security.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,11 @@ public class RoleController {
     @GetMapping
     public ResponseEntity<List<RoleDto>> getAllRoles(){
         return ResponseEntity.ok(roleService.getAllRoles());
+    }
+
+    @GetMapping("/{roleName}")
+    public ResponseEntity<Roles> getRoleByName(@PathVariable String roleName){
+        return ResponseEntity.ok(roleService.getRoleByName(roleName.toUpperCase()));
     }
 
 }

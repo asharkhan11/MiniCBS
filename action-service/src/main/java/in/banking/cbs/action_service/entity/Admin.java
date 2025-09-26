@@ -10,24 +10,18 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Entity
-@Table(name = "users",
-        indexes = {@Index(name = "uk_users_email", columnList = "email", unique = true)})
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class User {
+public class Admin {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-    @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
-    private int userId;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "admin_seq")
+    @SequenceGenerator(name = "admin_seq", sequenceName = "admin_seq")
+    private int adminId;
 
     @Column(nullable = false, length = 100)
     private String firstName;
@@ -50,6 +44,4 @@ public class User {
     @Builder.Default
     private UserStatus status = UserStatus.ACTIVE;
 
-    @ManyToMany
-    private Set<Branch> branches = new HashSet<>();
 }

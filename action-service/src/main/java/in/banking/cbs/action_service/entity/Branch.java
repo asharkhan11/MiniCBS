@@ -1,20 +1,23 @@
 package in.banking.cbs.action_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-@Entity
-@Table(name = "branches",
+@Table(
         uniqueConstraints = @UniqueConstraint(columnNames = {"bank_id", "ifsc_code"}),
         indexes = @Index(name = "index_branch_name", columnList = "name", unique = true))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Entity
 public class Branch {
 
     @Id
@@ -33,7 +36,15 @@ public class Branch {
     private String ifscCode;
 
     private String contactNumber;
-    private int managerId; // optional, not enforced as FK
+
+    @OneToOne
+    @JoinColumn(name = "managerId")
+    private Employee manager;
+
+    @ManyToOne
+    @JoinColumn(name = "bank_id", nullable = false)
+    private Bank bank;
+
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
@@ -42,11 +53,6 @@ public class Branch {
     @Column(nullable = false)
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-
-    @ManyToOne
-    @JoinColumn(name = "bank_id", nullable = false)
-    private Bank bank;
 
 
 }

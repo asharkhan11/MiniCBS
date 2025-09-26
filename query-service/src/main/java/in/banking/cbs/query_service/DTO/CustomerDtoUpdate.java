@@ -1,4 +1,4 @@
-package in.banking.cbs.action_service.DTO;
+package in.banking.cbs.query_service.DTO;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDtoUpdateBasic {
+public class CustomerDtoUpdate {
 
     @NotBlank(message = "first name must not be blank")
     private String firstName;

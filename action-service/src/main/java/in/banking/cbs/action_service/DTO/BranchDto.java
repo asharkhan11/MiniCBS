@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class BranchDto {
 
-    private String bankName;
     private String branchName;
 
     private String address;
@@ -21,6 +20,5 @@ public class BranchDto {
 
     private String ifscCode;
     private String contactNumber;
-    private int managerId;
 
 }

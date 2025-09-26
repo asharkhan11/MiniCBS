@@ -11,12 +11,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "banks", indexes = @Index(name = "index_bank_name", columnList = "name", unique = true))
+
+@Table(indexes = @Index(name = "index_bank_name", columnList = "name", unique = true))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Entity
 public class Bank {
 
     @Id
@@ -30,6 +31,10 @@ public class Bank {
     private String headOfficeAddress;
     private String contactNumber;
     private String email;
+
+    @OneToOne
+    @JoinColumn(name = "adminId", nullable = false, unique = true)
+    private Admin admin;
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
