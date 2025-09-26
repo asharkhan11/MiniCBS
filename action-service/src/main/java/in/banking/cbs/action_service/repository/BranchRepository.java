@@ -1,9 +1,12 @@
 package in.banking.cbs.action_service.repository;
 
+import in.banking.cbs.action_service.entity.Bank;
 import in.banking.cbs.action_service.entity.Branch;
+import in.banking.cbs.action_service.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,4 +19,10 @@ public interface BranchRepository extends JpaRepository<Branch, Integer> {
     Optional<Branch> findByBranchNameOrIfscCode(String branchName, String ifscCode);
 
     Optional<Branch> findByBranchNameAndBankBankName(String branchName, String bankName);
+
+    Optional<Branch> findByBranchNameAndBank(String branchName, Bank bank);
+
+    boolean existsByManager(Employee manager);
+
+    List<Branch> findAllByBank(Bank bank);
 }

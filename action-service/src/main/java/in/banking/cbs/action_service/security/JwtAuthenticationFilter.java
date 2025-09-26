@@ -63,7 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             System.out.println("authorities :" + authorities);
 
                             UsernamePasswordAuthenticationToken authentication =
-                                    new UsernamePasswordAuthenticationToken( username, null, authorities );
+                                    new UsernamePasswordAuthenticationToken( username, token, authorities );
 
                             authentication.setDetails(
                                     new WebAuthenticationDetailsSource().buildDetails(request));

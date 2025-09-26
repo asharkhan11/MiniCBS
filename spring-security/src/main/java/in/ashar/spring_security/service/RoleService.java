@@ -47,4 +47,10 @@ public class RoleService {
         List<Roles> roles = rolesRepository.findAll();
         return roles.stream().map(Roles::getRole).map(RoleDto::new).toList();
     }
+
+    public Roles getRoleByName(String roleName) {
+
+        return rolesRepository.findByRole(roleName).orElseThrow(()-> new NotFoundException("Role not found : "+ roleName));
+
+    }
 }
