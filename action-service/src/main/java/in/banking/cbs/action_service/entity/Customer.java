@@ -41,9 +41,4 @@ public class Customer {
     @CreationTimestamp
     private LocalDateTime joinedOn;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    @Builder.Default
-    private UserStatus status = UserStatus.INACTIVE;
-
 }

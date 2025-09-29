@@ -79,7 +79,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/account/{accountNumber}")
-    public ResponseEntity<Response<Account>> updateAccount(@PathVariable @Positive int accountNumber, @RequestBody @Valid AccountDtoUpdate accountDto){
+    public ResponseEntity<Response<Account>> updateAccount(@PathVariable @Positive String accountNumber, @RequestBody @Valid AccountDtoUpdate accountDto){
 
         Account account = employeeService.updateAccount(accountNumber, accountDto);
 
@@ -95,7 +95,7 @@ public class EmployeeController {
 
 
     @DeleteMapping("/account/{accountNumber}/{customerAlso}")
-    public ResponseEntity<Response<Void>> deleteAccount(@PathVariable int accountNumber, @PathVariable boolean customerAlso) {
+    public ResponseEntity<Response<Void>> deleteAccount(@PathVariable String accountNumber, @PathVariable boolean customerAlso) {
 
         employeeService.deleteAccount(accountNumber, customerAlso);
 
@@ -108,7 +108,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/account/{accountNumber}/deposit")
-    public ResponseEntity<Response<Account>> depositMoney(@PathVariable int accountNumber, @RequestParam double money){
+    public ResponseEntity<Response<Account>> depositMoney(@PathVariable String accountNumber, @RequestParam double money){
 
         Account account = employeeService.depositMoney(accountNumber, money);
 
@@ -122,7 +122,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/account/{accountNumber}/deduct")
-    public ResponseEntity<Response<Account>> deductMoney(@PathVariable int accountNumber, @RequestParam double money){
+    public ResponseEntity<Response<Account>> deductMoney(@PathVariable String accountNumber, @RequestParam double money){
 
         Account account = employeeService.deductMoney(accountNumber, money);
 

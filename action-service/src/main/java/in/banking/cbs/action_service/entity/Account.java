@@ -41,6 +41,11 @@ public class Account {
     @Column(length = 10)
     private String currency;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private UserStatus status = UserStatus.INACTIVE;
+
     @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
