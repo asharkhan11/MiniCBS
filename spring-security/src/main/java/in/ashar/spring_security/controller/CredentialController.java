@@ -49,4 +49,9 @@ public class CredentialController {
         return ResponseEntity.ok(credentialService.getCredentialById(credentialId));
     }
 
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Credential> getCredentialByEmail(@PathVariable String email){
+        return ResponseEntity.ok(credentialService.getCredentialByEmail(email));
+    }
+
 }

@@ -10,11 +10,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 @Entity
 @Data
 @AllArgsConstructor
@@ -37,9 +32,9 @@ public class Customer {
     @Column(nullable = false, unique = true)
     private int credentialId;
 
-    @ManyToMany
-    @Builder.Default
-    private Set<Branch> branches = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "branchId", nullable = false)
+    private Branch branch;
 
 
     @Column(nullable = false, updatable = false)
@@ -49,6 +44,6 @@ public class Customer {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private UserStatus status = UserStatus.ACTIVE;
+    private UserStatus status = UserStatus.INACTIVE;
 
 }

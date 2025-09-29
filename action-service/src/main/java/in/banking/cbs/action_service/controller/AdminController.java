@@ -180,7 +180,7 @@ public class AdminController {
 
         Response<Void> response = Response.<Void>builder()
                 .status(ResponseStatus.DELETED)
-                .message("Employee deleted successfully")
+                .message("Customer deleted successfully")
                 .build();
 
         return ResponseEntity.ok(response);

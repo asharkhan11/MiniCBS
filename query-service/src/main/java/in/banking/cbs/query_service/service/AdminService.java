@@ -1,32 +1,20 @@
 package in.banking.cbs.query_service.service;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import in.banking.cbs.query_service.DTO.*;
-import in.banking.cbs.query_service.client.SecurityServiceClient;
 import in.banking.cbs.query_service.entity.*;
-import in.banking.cbs.query_service.exception.AlreadyExistsException;
 import in.banking.cbs.query_service.exception.NotFoundException;
-import in.banking.cbs.query_service.exception.UnAuthorizedException;
 import in.banking.cbs.query_service.repository.*;
-import in.banking.cbs.query_service.security.LoggedInUser;
-import in.banking.cbs.query_service.utility.Helper;
-import in.banking.cbs.query_service.utility.UserRole;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AdminService {
 
-    private final ObjectMapper objectMapper;
+    @Autowired
     private final BankRepository bankRepository;
     private final BranchRepository branchRepository;
     private final SecurityServiceClient securityServiceClient;
@@ -35,5 +23,33 @@ public class AdminService {
     private final EmployeeRepository employeeRepository;
     private final Helper helper;
     private final CustomerRepository customerRepository;
+
+
+
+    public Bank getBankByName(String name) {
+        return bankRepository.findByBankNameIgnoreCase(name)
+                .orElseThrow(() -> new NotFoundException("Bank not found with this name: " + name));
+    }
+
+    public Bank getBankByEmail(String email) {
+        return bankRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("Bank not found with email: " + email));
+    }
+
+    public List<Bank> getBanksByAddress(String headOfficeAddress) {
+        List<Bank> banks = bankRepository.findByHeadOfficeAddressIgnoreCase(headOfficeAddress);
+        if(banks.isEmpty()) {
+            throw new NotFoundException ("No banks found at address: " + headOfficeAddress);
+        }
+        return banks;
+    }
+
+    public List<Bank> getBanksByAddressKeyword(String keyword) {
+        List<Bank> banks = bankRepository.findByHeadOfficeAddressContainingIgnoreCase(keyword);
+        if (banks.isEmpty()) {
+            throw new NotFoundException("No banks found containing keyword in address: " + keyword);
+        }
+        return banks;
+    }
 
 }
