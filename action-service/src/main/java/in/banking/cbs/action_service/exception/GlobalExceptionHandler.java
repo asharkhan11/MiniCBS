@@ -78,4 +78,22 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(InActiveAccountException.class)
+    public ResponseEntity<ErrorResponse> inActiveAccountExceptionHandler(InActiveAccountException e){
+        ErrorResponse response = new ErrorResponse();
+        response.setError("INACTIVE ACCOUNT");
+        response.setDetails(e.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+
+
+    @ExceptionHandler(InSufficientAmountException.class)
+    public ResponseEntity<ErrorResponse> inSufficientAmountExceptionHandler(InSufficientAmountException e){
+        ErrorResponse response = new ErrorResponse();
+        response.setError("INSUFFICIENT AMOUNT");
+        response.setDetails(e.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
 }
