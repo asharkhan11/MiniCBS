@@ -19,7 +19,7 @@ public class Credential {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int credentialId;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String username;
     @Column(nullable = false)
     private String password;
