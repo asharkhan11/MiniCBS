@@ -16,6 +16,15 @@ public class AdminService {
 
     @Autowired
     private final BankRepository bankRepository;
+    private final BranchRepository branchRepository;
+    private final SecurityServiceClient securityServiceClient;
+    private final AdminRepository adminRepository;
+    private final LoggedInUser loggedInUser;
+    private final EmployeeRepository employeeRepository;
+    private final Helper helper;
+    private final CustomerRepository customerRepository;
+
+
 
     public Bank getBankByName(String name) {
         return bankRepository.findByBankNameIgnoreCase(name)
@@ -42,4 +51,5 @@ public class AdminService {
         }
         return banks;
     }
+
 }
