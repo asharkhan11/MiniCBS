@@ -36,4 +36,7 @@ public interface SecurityServiceClient {
 
     @DeleteMapping("/credential/ids")
     void deleteAllCredentialsByIds(@RequestBody List<Integer> credentialIds);
+
+    @GetMapping("/email/{email}")
+    Credential getCredentialByEmail(@PathVariable String email);
 }

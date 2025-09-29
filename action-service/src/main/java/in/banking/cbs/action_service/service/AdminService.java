@@ -261,7 +261,7 @@ public class AdminService {
         }
 
         Customer customer = objectMapper.convertValue(customerDto, Customer.class);
-        customer.getBranches().add(branch);
+        customer.setBranch(branch);
 
         String email = customerDto.getEmail();
         String password = customerDto.getPassword();
@@ -280,12 +280,10 @@ public class AdminService {
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new NotFoundException("Customer not Exists"));
 
         Admin admin = loggedInUser.getLoggedInAdmin();
+
         Bank bank = bankRepository.findByAdmin(admin).orElseThrow(() -> new NotFoundException("Bank not Exists"));
 
-
-        Set<Bank> banks = customer.getBranches().stream().map(Branch::getBank).collect(Collectors.toSet());
-
-        if(!banks.contains(bank)){
+        if(!customer.getBranch().getBank().equals(bank)){
             throw new UnAuthorizedException("Access denied");
         }
 
@@ -312,23 +310,13 @@ public class AdminService {
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new NotFoundException("Customer not Exists"));
 
         Admin admin = loggedInUser.getLoggedInAdmin();
+
         Bank bank = bankRepository.findByAdmin(admin).orElseThrow(() -> new NotFoundException("Bank not Exists"));
-
-        Set<Bank> banks = customer.getBranches().stream().map(Branch::getBank).collect(Collectors.toSet());
-
-        if(!banks.contains(bank)){
+        if(!customer.getBranch().getBank().equals(bank)){
             throw new UnAuthorizedException("Access denied");
         }
 
-        Set<Branch> branches = customer.getBranches().stream().filter(b -> b.getBank() == bank).collect(Collectors.toSet());
+        customerRepository.delete(customer);
 
-        customer.getBranches().removeAll(branches);
-
-        if(customer.getBranches().isEmpty()){
-            customerRepository.delete(customer);
-            return;
-        }
-
-        customerRepository.save(customer);
     }
 }

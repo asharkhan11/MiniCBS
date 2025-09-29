@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -157,6 +158,20 @@ public class CredentialService {
 //        credentialDto.setRoleNames(credential.getRoles().stream().map(Roles::getRole).toList());
 
         return credential;
+
+    }
+
+    public Credential getCredentialByEmail(String email) {
+
+
+        Optional<Credential> credential = credentialRepository.findByUsername(email);
+
+//        CredentialDto credentialDto = new CredentialDto();
+//        credentialDto.setUsername(credential.getUsername());
+//        credentialDto.setPassword(credential.getPassword());
+//        credentialDto.setRoleNames(credential.getRoles().stream().map(Roles::getRole).toList());
+
+        return credential.orElse(null);
 
     }
 

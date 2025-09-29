@@ -37,9 +37,9 @@ public class Customer {
     @Column(nullable = false, unique = true)
     private int credentialId;
 
-    @ManyToMany
-    @Builder.Default
-    private Set<Branch> branches = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "branchId", nullable = false)
+    private Branch branch;
 
 
     @Column(nullable = false, updatable = false)
