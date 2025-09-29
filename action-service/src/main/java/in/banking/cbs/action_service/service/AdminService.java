@@ -126,12 +126,14 @@ public class AdminService {
         int managerId = branchDtoUpdate.getManagerId();
 
         if (managerId > 0) {
+            System.out.println("inside manager logic");
             Employee manager = employeeRepository.findById(managerId).orElseThrow(() -> new NotFoundException("Manager not Exists"));
+            System.out.println("this is fine 1");
+            branchRepository.findByManager(manager).ifPresent(m -> {
+                throw new AlreadyExistsException("Manager already assigned to branch : "+m.getBranchName());
+            });
 
-            if (branchRepository.existsByManager(manager)) {
-                throw new AlreadyExistsException("Manager already assigned to other branch");
-            }
-
+            System.out.println("this is fine 2");
             branch.setManager(manager);
 
             //update role of employee to branch
@@ -174,7 +176,7 @@ public class AdminService {
     public Employee createEmployee(EmployeeDto employeeDto) {
 
         String branchName = employeeDto.getBranchName();
-        Branch branch = branchRepository.findByBranchName(branchName).orElseThrow(() -> new RuntimeException("Branch not found with name: " + branchName));
+        Branch branch = branchRepository.findByBranchName(branchName).orElseThrow(() -> new NotFoundException("Branch not found with name: " + branchName));
 
         Admin admin = loggedInUser.getLoggedInAdmin();
         Bank bank = bankRepository.findByAdmin(admin).orElseThrow(() -> new NotFoundException("Bank not Exists"));

@@ -127,17 +127,16 @@ public class EmployeeService {
                 .accountType(accountType)
                 .balance(balance)
                 .currency(currency)
+                .status(UserStatus.ACTIVE)
                 .build();
 
-        customer.setStatus(UserStatus.ACTIVE);
-        customerRepository.save(customer);
 
         return accountRepository.save(account);
 
     }
 
 
-    public Account updateAccount(int accountNumber, AccountDtoUpdate accountDto) {
+    public Account updateAccount(String accountNumber, AccountDtoUpdate accountDto) {
 
         Account account = accountRepository.findByAccountNumber(accountNumber).orElseThrow(() -> new NotFoundException("Account not found"));
 
@@ -165,7 +164,7 @@ public class EmployeeService {
     }
 
 
-    public void deleteAccount(int accountNumber, boolean customerAlso) {
+    public void deleteAccount(String accountNumber, boolean customerAlso) {
 
         Account account = accountRepository.findByAccountNumber(accountNumber).orElseThrow(() -> new NotFoundException("Account not found"));
 
@@ -187,7 +186,7 @@ public class EmployeeService {
     }
 
 
-    public Account depositMoney(int accountNumber, double money) {
+    public Account depositMoney(String accountNumber, double money) {
 
         Account account = accountRepository.findByAccountNumber(accountNumber).orElseThrow(() -> new NotFoundException("Account not found"));
 
@@ -199,7 +198,7 @@ public class EmployeeService {
             throw new UnAuthorizedException("Access denied");
         }
 
-        if (customer.getStatus() != UserStatus.ACTIVE) {
+        if (account.getStatus() != UserStatus.ACTIVE) {
             throw new InActiveAccountException("Account is inactive, please activate before deposit");
         }
 
@@ -209,7 +208,7 @@ public class EmployeeService {
     }
 
 
-    public Account deductMoney(int accountNumber, double money) {
+    public Account deductMoney(String accountNumber, double money) {
 
         Account account = accountRepository.findByAccountNumber(accountNumber).orElseThrow(() -> new NotFoundException("Account not found"));
 
@@ -221,7 +220,7 @@ public class EmployeeService {
             throw new UnAuthorizedException("Access denied");
         }
 
-        if (customer.getStatus() != UserStatus.ACTIVE) {
+        if (account.getStatus() != UserStatus.ACTIVE) {
             throw new InActiveAccountException("Account is inactive, please activate before deposit");
         }
 

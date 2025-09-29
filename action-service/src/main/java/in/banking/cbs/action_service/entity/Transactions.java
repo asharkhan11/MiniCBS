@@ -1,5 +1,6 @@
 package in.banking.cbs.action_service.entity;
 
+import in.banking.cbs.action_service.utility.EntryType;
 import in.banking.cbs.action_service.utility.TxnStatus;
 import in.banking.cbs.action_service.utility.TxnType;
 import jakarta.persistence.*;
@@ -61,8 +62,11 @@ public class Transactions {
     @Column(name = "reference_no", length = 50)
     private String referenceNo;
 
+    @Enumerated(EnumType.STRING)
+    private EntryType entryType;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
-    private LocalDateTime txn;
+    private LocalDateTime txnDate;
 
 }

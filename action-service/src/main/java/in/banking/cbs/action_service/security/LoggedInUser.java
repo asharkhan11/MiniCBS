@@ -2,9 +2,11 @@ package in.banking.cbs.action_service.security;
 
 import in.banking.cbs.action_service.client.SecurityServiceClient;
 import in.banking.cbs.action_service.entity.Admin;
+import in.banking.cbs.action_service.entity.Customer;
 import in.banking.cbs.action_service.entity.Employee;
 import in.banking.cbs.action_service.exception.NotFoundException;
 import in.banking.cbs.action_service.repository.AdminRepository;
+import in.banking.cbs.action_service.repository.CustomerRepository;
 import in.banking.cbs.action_service.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +19,7 @@ public class LoggedInUser {
     private final SecurityServiceClient securityServiceClient;
     private final AdminRepository adminRepository;
     private final EmployeeRepository employeeRepository;
+    private final CustomerRepository customerRepository;
 
     public Admin getLoggedInAdmin(){
 
@@ -29,6 +32,13 @@ public class LoggedInUser {
 
         int credentialId = securityServiceClient.getCredential().getCredentialId();
         return employeeRepository.findByCredentialId(credentialId).orElseThrow(() -> new NotFoundException("Employee not found"));
+
+    }
+
+    public Customer getLoggedInCustomer(){
+
+        int credentialId = securityServiceClient.getCredential().getCredentialId();
+        return customerRepository.findByCredentialId(credentialId).orElseThrow(() -> new NotFoundException("Customer not found"));
 
     }
 

@@ -25,4 +25,6 @@ public interface BranchRepository extends JpaRepository<Branch, Integer> {
     boolean existsByManager(Employee manager);
 
     List<Branch> findAllByBank(Bank bank);
+
+    Optional<Branch> findByManager(Employee manager);
 }
