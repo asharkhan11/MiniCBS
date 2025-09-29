@@ -19,14 +19,16 @@ public class RoleService {
 
     public RoleDto createRole(RoleDto roleDto) {
 
-        if(!rolesRepository.existsByRole(roleDto.getRoleName().toUpperCase())){
+        roleDto.setRoleName(roleDto.getRoleName().toUpperCase());
+
+        if(!rolesRepository.existsByRole(roleDto.getRoleName())){
             Roles role = new Roles();
-            role.setRole(roleDto.getRoleName().toUpperCase());
+            role.setRole(roleDto.getRoleName());
             rolesRepository.save(role);
             return roleDto;
         }
 
-        throw new AlreadyExistsException("role with name : "+ roleDto.getRoleName().toUpperCase() + " already exists");
+        throw new AlreadyExistsException("role with name : "+ roleDto.getRoleName() + " already exists");
 
     }
 
@@ -44,5 +46,11 @@ public class RoleService {
     public List<RoleDto> getAllRoles() {
         List<Roles> roles = rolesRepository.findAll();
         return roles.stream().map(Roles::getRole).map(RoleDto::new).toList();
+    }
+
+    public Roles getRoleByName(String roleName) {
+
+        return rolesRepository.findByRole(roleName).orElseThrow(()-> new NotFoundException("Role not found : "+ roleName));
+
     }
 }

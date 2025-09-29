@@ -36,5 +36,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<ErrorResponseDto> notFoundException(AlreadyExistsException e){
+        ErrorResponseDto response = new ErrorResponseDto();
+        response.setError("CONFLICT");
+        response.setDetails(e.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
 
 }
