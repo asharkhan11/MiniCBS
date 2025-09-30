@@ -1,20 +1,22 @@
 package in.banking.cbs.action_service.service;
 
+import in.banking.cbs.action_service.DTO.ChangePasswordDto;
+import in.banking.cbs.action_service.DTO.Credential;
 import in.banking.cbs.action_service.DTO.TransferToDto;
-import in.banking.cbs.action_service.entity.Account;
-import in.banking.cbs.action_service.entity.Branch;
-import in.banking.cbs.action_service.entity.Customer;
-import in.banking.cbs.action_service.entity.Transactions;
+import in.banking.cbs.action_service.client.SecurityServiceClient;
+import in.banking.cbs.action_service.entity.*;
 import in.banking.cbs.action_service.exception.InActiveAccountException;
 import in.banking.cbs.action_service.exception.InSufficientAmountException;
 import in.banking.cbs.action_service.exception.InvalidDataException;
 import in.banking.cbs.action_service.exception.NotFoundException;
 import in.banking.cbs.action_service.repository.AccountRepository;
+import in.banking.cbs.action_service.repository.CustomerDocumentRepository;
 import in.banking.cbs.action_service.repository.CustomerRepository;
 import in.banking.cbs.action_service.repository.TransactionRepository;
 import in.banking.cbs.action_service.security.LoggedInUser;
 import in.banking.cbs.action_service.utility.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,7 @@ public class CustomerService {
     private final AccountRepository accountRepository;
     private final CustomerRepository customerRepository;
     private final TransactionRepository transactionRepository;
+    private final CustomerDocumentRepository documentRepository;
 
     @Transactional
     public Transactions transferTo(TransferToDto transferToDto) {
@@ -109,6 +112,18 @@ public class CustomerService {
         toAccount.setBalance(toAccount.getBalance() + amount);
 
         accountRepository.saveAll(List.of(fromAccount,toAccount));
+
+    }
+
+    @Async("fileHandlerExecutor")
+    public void storeFilePathsInDb(int customerId, String uploadedFilesPath) {
+
+        CustomerDocument customerDocument = CustomerDocument.builder()
+                .minioFilePath(uploadedFilesPath)
+                .customerId(customerId)
+                .build();
+
+        documentRepository.save(customerDocument);
 
     }
 

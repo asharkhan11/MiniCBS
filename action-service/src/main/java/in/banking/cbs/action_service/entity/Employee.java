@@ -1,6 +1,7 @@
 package in.banking.cbs.action_service.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import in.banking.cbs.action_service.utility.UserStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -37,6 +38,7 @@ public class Employee {
 
     @ManyToOne
     @JoinColumn(name = "branchId", nullable = false)
+    @JsonBackReference("branch-manager")
     private Branch branch;
 
     @Column(nullable = false, updatable = false)

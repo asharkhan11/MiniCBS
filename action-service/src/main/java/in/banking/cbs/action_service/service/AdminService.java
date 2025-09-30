@@ -116,24 +116,34 @@ public class AdminService {
         Branch branch = branchRepository.findByBranchNameAndBank(branchName, bank).orElseThrow(() -> new NotFoundException("Branch not Exists"));
 
         // update allowed fields
-        branch.setAddress(branchDtoUpdate.getAddress());
-        branch.setCity(branchDtoUpdate.getCity());
-        branch.setState(branchDtoUpdate.getState());
-        branch.setIfscCode(branchDtoUpdate.getIfscCode());
-        branch.setContactNumber(branchDtoUpdate.getContactNumber());
+        if(!branchDtoUpdate.getAddress().isBlank()) {
+            branch.setAddress(branchDtoUpdate.getAddress());
+        }
+        if(!branchDtoUpdate.getCity().isBlank()){
+            branch.setCity(branchDtoUpdate.getCity());
+        }
+        if(!branchDtoUpdate.getState().isBlank()){
+            branch.setState(branchDtoUpdate.getState());
+        }
+        if(!branchDtoUpdate.getIfscCode().isBlank()){
+            branchRepository.findByIfscCode(branchDtoUpdate.getIfscCode()).ifPresent(ifsc -> {throw new AlreadyExistsException("IFSC code already exists : "+branchDtoUpdate.getIfscCode());});
+            branch.setIfscCode(branchDtoUpdate.getIfscCode());
+        }
+        if(!branchDtoUpdate.getContactNumber().isBlank()){
+            branch.setContactNumber(branchDtoUpdate.getContactNumber());
+        }
 
         // update manager of branch
         int managerId = branchDtoUpdate.getManagerId();
 
         if (managerId > 0) {
-            System.out.println("inside manager logic");
+
             Employee manager = employeeRepository.findById(managerId).orElseThrow(() -> new NotFoundException("Manager not Exists"));
-            System.out.println("this is fine 1");
+
             branchRepository.findByManager(manager).ifPresent(m -> {
                 throw new AlreadyExistsException("Manager already assigned to branch : "+m.getBranchName());
             });
 
-            System.out.println("this is fine 2");
             branch.setManager(manager);
 
             //update role of employee to branch

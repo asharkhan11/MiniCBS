@@ -175,4 +175,9 @@ public class CredentialService {
 
     }
 
+    public boolean matchPassword(String rawPassword, String encodedPassword) {
+
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+
+    }
 }
