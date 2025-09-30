@@ -3,12 +3,8 @@ package in.banking.cbs.action_service.client;
 import in.banking.cbs.action_service.DTO.Credential;
 import in.banking.cbs.action_service.DTO.LoginResponse;
 import in.banking.cbs.action_service.DTO.Roles;
-import in.banking.cbs.action_service.exception.UnAuthenticatedException;
-import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,4 +35,8 @@ public interface SecurityServiceClient {
 
     @GetMapping("/email/{email}")
     Credential getCredentialByEmail(@PathVariable String email);
+
+    @PostMapping("/credential/password/match")
+    boolean matchPassword(@RequestParam String rawPassword, @RequestParam String encodedPassword);
+
 }

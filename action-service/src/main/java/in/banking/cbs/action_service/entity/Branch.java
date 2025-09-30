@@ -39,6 +39,7 @@ public class Branch {
 
     @OneToOne
     @JoinColumn(name = "managerId")
+    @JsonManagedReference("branch-manager")
     private Employee manager;
 
     @ManyToOne

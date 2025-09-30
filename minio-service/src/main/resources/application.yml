@@ -1,0 +1,26 @@
+server:
+  port: 9190
+
+spring:
+  application:
+    name: minio-service
+
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 25MB
+
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+minio:
+  url: http://localhost:9000
+  access-key: admin
+  secret-key: Pass@123
+  bucket: customer-docs

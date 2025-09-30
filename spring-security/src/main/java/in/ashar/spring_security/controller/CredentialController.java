@@ -54,4 +54,10 @@ public class CredentialController {
         return ResponseEntity.ok(credentialService.getCredentialByEmail(email));
     }
 
+    @PostMapping("/password/match")
+    public ResponseEntity<Boolean> matches(@RequestParam String rawPassword, @RequestParam String encodedPassword) {
+        return ResponseEntity.ok(credentialService.matchPassword(rawPassword, encodedPassword));
+    }
+
+
 }

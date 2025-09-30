@@ -18,7 +18,7 @@ public class HelperClass {
 
     public Set<Roles> getRolesFromName(List<String> roleNames) {
         // Fetch matching roles from DB
-        Set<Roles> foundRoles = rolesRepository.findByRoleIn(roleNames);
+        Set<Roles> foundRoles = rolesRepository.findAllByRoleIn(roleNames);
 
         // Extract role names from found roles
         Set<String> foundRoleNames = foundRoles.stream()
