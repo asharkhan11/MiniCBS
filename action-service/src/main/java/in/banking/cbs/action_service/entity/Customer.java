@@ -1,6 +1,5 @@
 package in.banking.cbs.action_service.entity;
 
-import in.banking.cbs.action_service.utility.UserStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,7 +28,7 @@ public class Customer {
     private String phone;
     private String address;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private int credentialId;
 
     @ManyToOne
