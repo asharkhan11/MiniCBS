@@ -1,9 +1,7 @@
 package in.banking.cbs.action_service.service;
 
-import in.banking.cbs.action_service.DTO.ChangePasswordDto;
-import in.banking.cbs.action_service.DTO.Credential;
+
 import in.banking.cbs.action_service.DTO.TransferToDto;
-import in.banking.cbs.action_service.client.SecurityServiceClient;
 import in.banking.cbs.action_service.entity.*;
 import in.banking.cbs.action_service.exception.InActiveAccountException;
 import in.banking.cbs.action_service.exception.InSufficientAmountException;
@@ -16,7 +14,6 @@ import in.banking.cbs.action_service.repository.TransactionRepository;
 import in.banking.cbs.action_service.security.LoggedInUser;
 import in.banking.cbs.action_service.utility.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -112,18 +109,6 @@ public class CustomerService {
         toAccount.setBalance(toAccount.getBalance() + amount);
 
         accountRepository.saveAll(List.of(fromAccount,toAccount));
-
-    }
-
-    @Async("fileHandlerExecutor")
-    public void storeFilePathsInDb(int customerId, String uploadedFilesPath) {
-
-        CustomerDocument customerDocument = CustomerDocument.builder()
-                .minioFilePath(uploadedFilesPath)
-                .customerId(customerId)
-                .build();
-
-        documentRepository.save(customerDocument);
 
     }
 

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Table(
         uniqueConstraints = @UniqueConstraint(columnNames = {"bank_id", "ifsc_code"}),
-        indexes = @Index(name = "index_branch_name", columnList = "name", unique = true))
+        indexes = @Index(name = "index_branch_name", columnList = "branchName", unique = true))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

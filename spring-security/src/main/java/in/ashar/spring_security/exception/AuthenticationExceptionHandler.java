@@ -12,14 +12,21 @@ import java.io.IOException;
 
 public class AuthenticationExceptionHandler implements AuthenticationEntryPoint {
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+        // Use the real exception message from DaoAuthenticationProvider
+        String realMessage = authException.getCause() != null
+                ? authException.getCause().getMessage()
+                : authException.getMessage();
+
         response.getWriter().write("""
-                                        {
-                                            "error":"Authentication Failed",
-                                            "detail": "%s"
-                                        }
-                                        """.formatted(authException.getMessage()));
+            {
+                "error": "Authentication Failed",
+                "detail": "%s"
+            }
+            """.formatted(realMessage));
     }
+
 }

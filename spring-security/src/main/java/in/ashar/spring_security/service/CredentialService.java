@@ -56,9 +56,9 @@ public class CredentialService {
 
     public Credential createCredentialWithEntity(@Valid Credential cred) {
 
-//        if(credentialRepository.existsByUsername(cred.getUsername())){
-//            throw new AlreadyExistsException("username already exists");
-//        }
+        if(credentialRepository.existsByUsername(cred.getUsername())){
+            throw new AlreadyExistsException("username already exists");
+        }
 
         List<String> roleNames = cred.getRoles().stream().map(Roles::getRole).toList();
         Set<Roles> roles = helperClass.getRolesFromName(roleNames);
@@ -100,10 +100,10 @@ public class CredentialService {
     public Credential updateCredentialById(int credentialId, Credential credential) {
 
         Credential existingCredential = credentialRepository.findById(credentialId).orElseThrow(() -> new NotFoundException("credentials not found"));
-//
-//        if(credentialRepository.existsByUsername(credential.getUsername())){
-//            throw new AlreadyExistsException("Username already exists");
-//        }
+
+        if(credentialRepository.existsByUsername(credential.getUsername())){
+            throw new AlreadyExistsException("Username already exists");
+        }
 
         existingCredential.setUsername(credential.getUsername());
 

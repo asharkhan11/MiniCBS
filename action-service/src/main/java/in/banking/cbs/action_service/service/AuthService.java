@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import in.banking.cbs.action_service.DTO.*;
 import in.banking.cbs.action_service.client.SecurityServiceClient;
 import in.banking.cbs.action_service.entity.Admin;
+import in.banking.cbs.action_service.exception.AlreadyExistsException;
 import in.banking.cbs.action_service.repository.AdminRepository;
 import in.banking.cbs.action_service.utility.UserRole;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,12 @@ public class AuthService {
     private final AdminRepository adminRepository;
 
     public Admin register(AdminDto adminDto){
+
+        Credential credentialExists = securityServiceClient.getCredentialByEmail(adminDto.getEmail());
+
+        if(credentialExists != null){
+            throw new AlreadyExistsException("user already registered with same email, please try using different mail");
+        }
 
         Admin admin = objectMapper.convertValue(adminDto, Admin.class);
 
