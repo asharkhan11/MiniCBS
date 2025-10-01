@@ -67,13 +67,4 @@ public class CustomerController {
     }
 
 
-    @GetMapping("/download/{fileName}")
-    public ResponseEntity<byte[]> download(@PathVariable String fileName) {
-        byte[] data = minioClientService.downloadFile(fileName);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(data);
-    }
-
 }

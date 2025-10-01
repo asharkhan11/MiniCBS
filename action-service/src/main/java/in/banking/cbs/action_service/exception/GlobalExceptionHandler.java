@@ -114,6 +114,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(OtpExpiredException.class)
+    public ResponseEntity<ErrorResponse> otpExpiredExceptionHandler(OtpExpiredException e){
+        ErrorResponse response = new ErrorResponse();
+        response.setError("OTP EXPIRED");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 
     @ExceptionHandler(InActiveAccountException.class)
     public ResponseEntity<ErrorResponse> inActiveAccountExceptionHandler(InActiveAccountException e){

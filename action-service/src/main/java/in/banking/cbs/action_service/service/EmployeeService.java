@@ -7,6 +7,7 @@ import in.banking.cbs.action_service.entity.*;
 import in.banking.cbs.action_service.exception.*;
 import in.banking.cbs.action_service.repository.AccountRepository;
 import in.banking.cbs.action_service.repository.BranchRepository;
+import in.banking.cbs.action_service.repository.CustomerDocumentRepository;
 import in.banking.cbs.action_service.repository.CustomerRepository;
 import in.banking.cbs.action_service.security.LoggedInUser;
 import in.banking.cbs.action_service.utility.AccountType;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -31,6 +33,7 @@ public class EmployeeService {
     private final Helper helper;
     private final CustomerRepository customerRepository;
     private final AccountRepository accountRepository;
+    private final CustomerDocumentRepository documentRepository;
 
     public Customer createCustomer(CustomerDto customerDto) {
 
@@ -245,6 +248,25 @@ public class EmployeeService {
         account.setBalance(availableBalance - money);
 
         return accountRepository.save(account);
+
+    }
+
+    public List<String> getCustomerFileNames(int customerId) {
+
+        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new NotFoundException("Customer not found"));
+
+        Employee employee = loggedInUser.getLoggedInEmployee();
+        if (!employee.getBranch().equals(customer.getBranch())) {
+            throw new UnAuthorizedException("Access denied");
+        }
+
+        List<CustomerDocument> customerDocuments = documentRepository.findAllByCustomerId(customerId);
+
+        if (customerDocuments==null || customerDocuments.isEmpty()){
+            throw new NotFoundException("Documents not uploaded by customer : "+customerId);
+        }
+
+        return customerDocuments.stream().map(CustomerDocument::getMinioFilePath).toList();
 
     }
 }
