@@ -34,8 +34,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
 
-        System.out.println(authHeader);
-        System.out.println("in jwt filter");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
@@ -58,9 +56,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     .map(Object::toString) // safely convert any type
                                     .map(SimpleGrantedAuthority::new)
                                     .collect(Collectors.toList());
-
-                            System.out.println("role : "+roles);
-                            System.out.println("authorities :" + authorities);
 
                             UsernamePasswordAuthenticationToken authentication =
                                     new UsernamePasswordAuthenticationToken( username, token, authorities );

@@ -8,12 +8,17 @@ import in.banking.cbs.action_service.entity.Account;
 import in.banking.cbs.action_service.entity.Customer;
 import in.banking.cbs.action_service.message.Response;
 import in.banking.cbs.action_service.service.EmployeeService;
+import in.banking.cbs.action_service.service.MinioClientService;
 import in.banking.cbs.action_service.utility.ResponseStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final MinioClientService minioClientService;
 
     @PostMapping("/customer")
     public ResponseEntity<Response<Customer>> createCustomer(@RequestBody CustomerDto customerDto) {
@@ -136,4 +142,29 @@ public class EmployeeController {
     }
 
 
+    @GetMapping("/customer/document/{fileName}")
+    public ResponseEntity<byte[]> download(@PathVariable String fileName) {
+        byte[] data = minioClientService.downloadFile(fileName);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(data);
+    }
+
+
+    /// ////////// QUERY SERVICE ///////////////////////
+
+    @GetMapping("/customer/{customerId}/document")
+    public ResponseEntity<Response<List<String>>> getFileNames(@PathVariable int customerId){
+
+        List<String> fileNames = employeeService.getCustomerFileNames(customerId);
+
+        Response<List<String>> response = Response.<List<String>>builder()
+                .status(ResponseStatus.SUCCESS)
+                .message("file names fetched successfully")
+                .data(fileNames)
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
 }

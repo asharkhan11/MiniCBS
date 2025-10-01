@@ -8,12 +8,10 @@ import in.banking.cbs.action_service.entity.Admin;
 import in.banking.cbs.action_service.message.Response;
 import in.banking.cbs.action_service.service.AuthService;
 import in.banking.cbs.action_service.utility.ResponseStatus;
+import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -47,6 +45,33 @@ public class AuthController {
                 .status(ResponseStatus.CREATED)
                 .message("Logged in successfully")
                 .data(login)
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("/reset-password")
+    public ResponseEntity<Response<Void>> resetPassword(@RequestParam @Email String email){
+
+        authService.sendResetPasswordMail(email);
+
+        Response<Void> response = Response.<Void>builder()
+                .status(ResponseStatus.SUCCESS)
+                .message("OTP has been sent to your registered email successfully")
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/change-password")
+    public ResponseEntity<Response<Void>> changePassword(@RequestParam int otp, @RequestParam String newPassword){
+
+        authService.changePassword(otp, newPassword);
+
+        Response<Void> response = Response.<Void>builder()
+                .status(ResponseStatus.SUCCESS)
+                .message("Password changed successfully")
                 .build();
 
         return ResponseEntity.ok(response);

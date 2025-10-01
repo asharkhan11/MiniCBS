@@ -46,6 +46,8 @@ public class Account {
     @Builder.Default
     private UserStatus status = UserStatus.INACTIVE;
 
+    private String kyc;
+
     @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;

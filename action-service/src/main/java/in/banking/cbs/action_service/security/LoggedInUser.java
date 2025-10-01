@@ -42,4 +42,31 @@ public class LoggedInUser {
 
     }
 
+    public int getCredentialId() {
+
+        try {
+            Customer customer = getLoggedInCustomer();
+            return customer.getCredentialId();
+        } catch (NotFoundException ignored) {
+
+        }
+
+        try {
+            Employee employee = getLoggedInEmployee();
+            return employee.getCredentialId();
+
+        } catch (NotFoundException ignored) {
+        }
+
+        try {
+            Admin admin = getLoggedInAdmin();
+            return admin.getCredentialId();
+        } catch (NotFoundException ignored) {
+
+        }
+
+        throw new NotFoundException("User not found");
+
+    }
+
 }
