@@ -10,7 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 
-@Table(indexes = @Index(name = "index_bank_name", columnList = "name", unique = true))
+@Table(indexes = @Index(name = "index_bank_name", columnList = "bankName", unique = true))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -28,29 +28,24 @@ public class MinioClientService {
     private final CustomerService customerService;
     private final LoggedInUser loggedInUser;
 
-//    public String sendFileToMinio(MultipartFile file) {
-//        Mono<String> stringMono = webClient.post()
-//                .uri("http://minio-service/files/upload")
-//                .contentType(MediaType.MULTIPART_FORM_DATA)
-//                .body(file, MultipartFile.class)
-//                .retrieve()
-//                .bodyToMono(String.class)
-//                .onErrorResume(ex -> Mono.error());
-//
-//        return stringMono.block(Duration.ofSeconds(3));
-//    }
+    public Mono<String> sendFileToMinio(MultipartFile file) {
+        return webClient.post()
+                .uri("http://minio-service/files/upload")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData("file", file.getResource()))
+                .retrieve()
+                .bodyToMono(String.class);
+    }
 
 
     public byte[] downloadFile(String fileName) {
-        return webClient.get().uri("http://minio-service/files/download/{fileName}", fileName).retrieve().bodyToMono(byte[].class).block();
+        return webClient
+                .get()
+                .uri("http://minio-service/files/download/{fileName}", fileName)
+                .retrieve()
+                .bodyToMono(byte[].class)
+                .block();
     }
 
 
-    private byte[] getBytes(MultipartFile file) {
-        try {
-            return file.getBytes();
-        } catch (Exception e) {
-            throw new RuntimeException("Error reading file: " + file.getOriginalFilename(), e);
-        }
-    }
 }

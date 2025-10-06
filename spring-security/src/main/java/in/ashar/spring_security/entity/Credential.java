@@ -12,14 +12,14 @@ import java.util.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(indexes = @Index(columnList = "username"))
+@Table(indexes = @Index(columnList = "username", unique = true))
 public class Credential {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int credentialId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
     @Column(nullable = false)
     private String password;

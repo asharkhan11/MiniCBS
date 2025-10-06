@@ -33,7 +33,7 @@ public interface SecurityServiceClient {
     @DeleteMapping("/credential/ids")
     void deleteAllCredentialsByIds(@RequestBody List<Integer> credentialIds);
 
-    @GetMapping("/email/{email}")
+    @GetMapping("/credential/email/{email}")
     Credential getCredentialByEmail(@PathVariable String email);
 
     @PostMapping("/credential/password/match")

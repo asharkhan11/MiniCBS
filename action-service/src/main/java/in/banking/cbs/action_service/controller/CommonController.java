@@ -6,19 +6,16 @@ import in.banking.cbs.action_service.service.CommonService;
 import in.banking.cbs.action_service.utility.ResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/authenticated")
+@RequestMapping("/credential")
 @RestController
 @RequiredArgsConstructor
 public class CommonController {
 
     private final CommonService commonService;
 
-    @PutMapping("/password-change")
+    @PutMapping("/change-password")
     public ResponseEntity<Response<Void>> changePassword(@RequestBody ChangePasswordDto changePasswordDto){
 
         commonService.changePassword(changePasswordDto);
@@ -31,6 +28,7 @@ public class CommonController {
         return ResponseEntity.ok(response);
 
     }
+
 
 
 }

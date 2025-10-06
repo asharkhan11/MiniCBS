@@ -4,6 +4,7 @@ package in.banking.cbs.action_service.configuration;
 import in.banking.cbs.action_service.exception.AuthenticationExceptionHandler;
 import in.banking.cbs.action_service.exception.AuthorizationExceptionHandler;
 import in.banking.cbs.action_service.security.JwtAuthenticationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,7 +48,11 @@ public class SecurityConfig {
                 .exceptionHandling(e -> {
                     e
                     .authenticationEntryPoint(new AuthenticationExceptionHandler())
-                    .accessDeniedHandler(new AuthorizationExceptionHandler());
+                    .accessDeniedHandler((req, res, ex) -> {
+                        if (!res.isCommitted()) {
+                            res.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
+                        }
+                    });
                 })
                 .build();
     }

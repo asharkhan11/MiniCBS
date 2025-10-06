@@ -30,4 +30,7 @@ public class AccountDto {
     @NotBlank(message = "currency must be provided")
     private String currency;
 
+    @NotBlank(message = "information for KYC must be provided")
+    private String kyc;
+
 }

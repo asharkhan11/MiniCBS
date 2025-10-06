@@ -39,7 +39,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> {
                     auth
-                            .requestMatchers("/auth/**").permitAll()
+                            .requestMatchers("/auth/**","/credential/email/**").permitAll()
                             .requestMatchers("/role/**").hasRole("ADMIN")
                             .anyRequest().authenticated();
 
@@ -49,7 +49,11 @@ public class SecurityConfig {
                 .exceptionHandling(e -> {
                     e
                     .authenticationEntryPoint(new AuthenticationExceptionHandler())
-                    .accessDeniedHandler(new AuthorizationExceptionHandler());
+                    .accessDeniedHandler((req, res, ex) -> {
+                        if (!res.isCommitted()) {
+                            res.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
+                        }
+                    });
                 })
                 .build();
     }

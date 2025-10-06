@@ -20,7 +20,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -277,11 +276,21 @@ public class AdminService {
 
         String email = customerDto.getEmail();
         String password = customerDto.getPassword();
-        Credential cred = helper.createCredential(email, password, UserRole.CUSTOMER.name());
 
-        Credential credential = securityServiceClient.register(cred);
+        Credential credentialExists = securityServiceClient.getCredentialByEmail(email);
 
-        customer.setCredentialId(credential.getCredentialId());
+        if(credentialExists != null){
+
+            customer.setCredentialId(credentialExists.getCredentialId());
+            
+        }
+        else {
+
+            Credential cred = helper.createCredential(email, password, UserRole.CUSTOMER.name());
+            Credential credential = securityServiceClient.register(cred);
+            customer.setCredentialId(credential.getCredentialId());
+
+        }
 
         return customerRepository.save(customer);
 

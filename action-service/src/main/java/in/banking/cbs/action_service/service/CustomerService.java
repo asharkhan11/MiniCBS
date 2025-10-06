@@ -1,22 +1,16 @@
 package in.banking.cbs.action_service.service;
 
-import in.banking.cbs.action_service.DTO.ChangePasswordDto;
-import in.banking.cbs.action_service.DTO.Credential;
+
+import in.banking.cbs.action_service.DTO.LoanRequestDTO;
 import in.banking.cbs.action_service.DTO.TransferToDto;
 import in.banking.cbs.action_service.client.SecurityServiceClient;
 import in.banking.cbs.action_service.entity.*;
-import in.banking.cbs.action_service.exception.InActiveAccountException;
-import in.banking.cbs.action_service.exception.InSufficientAmountException;
-import in.banking.cbs.action_service.exception.InvalidDataException;
-import in.banking.cbs.action_service.exception.NotFoundException;
-import in.banking.cbs.action_service.repository.AccountRepository;
-import in.banking.cbs.action_service.repository.CustomerDocumentRepository;
-import in.banking.cbs.action_service.repository.CustomerRepository;
-import in.banking.cbs.action_service.repository.TransactionRepository;
+import in.banking.cbs.action_service.exception.*;
+import in.banking.cbs.action_service.repository.*;
 import in.banking.cbs.action_service.security.LoggedInUser;
 import in.banking.cbs.action_service.utility.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +25,8 @@ public class CustomerService {
     private final AccountRepository accountRepository;
     private final CustomerRepository customerRepository;
     private final TransactionRepository transactionRepository;
-    private final CustomerDocumentRepository documentRepository;
+    private final LoanRequestRepository loanRequestRepository;
+
 
     @Transactional
     public Transactions transferTo(TransferToDto transferToDto) {
@@ -115,16 +110,33 @@ public class CustomerService {
 
     }
 
-    @Async("fileHandlerExecutor")
-    public void storeFilePathsInDb(int customerId, String uploadedFilesPath) {
+    public int requestLoan(@Valid LoanRequestDTO loanRequestDTO) {
 
-        CustomerDocument customerDocument = CustomerDocument.builder()
-                .minioFilePath(uploadedFilesPath)
-                .customerId(customerId)
+        Customer customer = loggedInUser.getLoggedInCustomer();
+
+//        loanRequestRepository.findByCustomerId(customer.getCustomerId()).ifPresent(loanRequest->{
+//            throw new AlreadyExistsException("loan request already exists with request id : "+ loanRequest.getRequestId());
+//        });
+
+        LoanRequest loanRequest = LoanRequest.builder()
+                .amount(loanRequestDTO.getAmount())
+                .termInMonths(loanRequestDTO.getTermInMonths())
+                .customerId(customer.getCustomerId())
+                .branchId(customer.getBranch().getBranchId())
+                .purpose(loanRequestDTO.getPurpose())
                 .build();
 
-        documentRepository.save(customerDocument);
+        return loanRequestRepository.save(loanRequest).getRequestId();
 
     }
 
+    public LoanRequestStatus checkLoanStatus() {
+
+        Customer customer = loggedInUser.getLoggedInCustomer();
+
+        LoanRequest loanRequest = loanRequestRepository.findByCustomerId(customer.getCustomerId()).orElseThrow(() -> new NotFoundException("Loan request not found"));
+
+        return loanRequest.getStatus();
+
+    }
 }

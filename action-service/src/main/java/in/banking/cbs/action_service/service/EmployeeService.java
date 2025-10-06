@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import in.banking.cbs.action_service.DTO.*;
 import in.banking.cbs.action_service.client.SecurityServiceClient;
 import in.banking.cbs.action_service.entity.*;
-import in.banking.cbs.action_service.exception.InActiveAccountException;
-import in.banking.cbs.action_service.exception.InSufficientAmountException;
-import in.banking.cbs.action_service.exception.NotFoundException;
-import in.banking.cbs.action_service.exception.UnAuthorizedException;
+import in.banking.cbs.action_service.exception.*;
 import in.banking.cbs.action_service.repository.AccountRepository;
 import in.banking.cbs.action_service.repository.BranchRepository;
+import in.banking.cbs.action_service.repository.CustomerDocumentRepository;
 import in.banking.cbs.action_service.repository.CustomerRepository;
 import in.banking.cbs.action_service.security.LoggedInUser;
 import in.banking.cbs.action_service.utility.AccountType;
@@ -18,10 +16,10 @@ import in.banking.cbs.action_service.utility.UserRole;
 import in.banking.cbs.action_service.utility.UserStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Synchronized;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -35,6 +33,7 @@ public class EmployeeService {
     private final Helper helper;
     private final CustomerRepository customerRepository;
     private final AccountRepository accountRepository;
+    private final CustomerDocumentRepository documentRepository;
 
     public Customer createCustomer(CustomerDto customerDto) {
 
@@ -52,11 +51,21 @@ public class EmployeeService {
 
         String email = customerDto.getEmail();
         String password = customerDto.getPassword();
-        Credential cred = helper.createCredential(email, password, UserRole.CUSTOMER.name());
 
-        Credential credential = securityServiceClient.register(cred);
+        Credential credentialExists = securityServiceClient.getCredentialByEmail(email);
 
-        customer.setCredentialId(credential.getCredentialId());
+        if(credentialExists != null){
+
+            customer.setCredentialId(credentialExists.getCredentialId());
+
+        }
+        else {
+
+            Credential cred = helper.createCredential(email, password, UserRole.CUSTOMER.name());
+            Credential credential = securityServiceClient.register(cred);
+            customer.setCredentialId(credential.getCredentialId());
+
+        }
 
         return customerRepository.save(customer);
 
@@ -107,7 +116,14 @@ public class EmployeeService {
     public Account createAccount(@Valid AccountDto accountDto) {
 
         int customerId = accountDto.getCustomerId();
+        AccountType accountType = accountDto.getAccountType();
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new NotFoundException("Customer not found with id : " + customerId));
+
+        accountRepository.findByCustomerIdAndAccountType(customerId, accountType).ifPresent(
+                account -> {
+                    throw new AlreadyExistsException("account already exists");
+                }
+        );
 
         Employee employee = loggedInUser.getLoggedInEmployee();
         if (!employee.getBranch().equals(customer.getBranch())) {
@@ -117,7 +133,6 @@ public class EmployeeService {
         Random random = new Random();
 
         long accountNumber = 100000000000L + (long) (random.nextDouble() * 900000000000L);
-        AccountType accountType = accountDto.getAccountType();
         double balance = accountDto.getBalance();
         String currency = accountDto.getCurrency();
 
@@ -128,6 +143,7 @@ public class EmployeeService {
                 .balance(balance)
                 .currency(currency)
                 .status(UserStatus.ACTIVE)
+                .kyc(accountDto.getKyc())
                 .build();
 
 
@@ -233,6 +249,25 @@ public class EmployeeService {
         account.setBalance(availableBalance - money);
 
         return accountRepository.save(account);
+
+    }
+
+    public List<String> getCustomerFileNames(int customerId) {
+
+        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new NotFoundException("Customer not found"));
+
+        Employee employee = loggedInUser.getLoggedInEmployee();
+        if (!employee.getBranch().equals(customer.getBranch())) {
+            throw new UnAuthorizedException("Access denied");
+        }
+
+        List<CustomerDocument> customerDocuments = documentRepository.findAllByCustomerId(customerId);
+
+        if (customerDocuments==null || customerDocuments.isEmpty()){
+            throw new NotFoundException("Documents not uploaded by customer : "+customerId);
+        }
+
+        return customerDocuments.stream().map(CustomerDocument::getMinioFilePath).toList();
 
     }
 }
