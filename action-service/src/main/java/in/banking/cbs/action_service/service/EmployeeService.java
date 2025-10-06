@@ -143,6 +143,7 @@ public class EmployeeService {
                 .balance(balance)
                 .currency(currency)
                 .status(UserStatus.ACTIVE)
+                .kyc(accountDto.getKyc())
                 .build();
 
 

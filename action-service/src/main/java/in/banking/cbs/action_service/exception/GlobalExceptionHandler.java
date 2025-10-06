@@ -140,4 +140,13 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
+
+    @ExceptionHandler(InvalidOperationException.class)
+    public ResponseEntity<ErrorResponse> invalidOperationExceptionHandler(InvalidOperationException e){
+        ErrorResponse response = new ErrorResponse();
+        response.setError("INVALID OPERATION");
+        response.setDetails(e.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 }

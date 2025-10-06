@@ -1,5 +1,6 @@
 package in.banking.cbs.action_service.controller;
 
+import in.banking.cbs.action_service.DTO.LoanRequestDTO;
 import in.banking.cbs.action_service.DTO.TransferToDto;
 import in.banking.cbs.action_service.entity.CustomerDocument;
 import in.banking.cbs.action_service.entity.Transactions;
@@ -8,11 +9,14 @@ import in.banking.cbs.action_service.repository.CustomerDocumentRepository;
 import in.banking.cbs.action_service.security.LoggedInUser;
 import in.banking.cbs.action_service.service.CustomerService;
 import in.banking.cbs.action_service.service.MinioClientService;
+import in.banking.cbs.action_service.utility.LoanRequestStatus;
 import in.banking.cbs.action_service.utility.ResponseStatus;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
@@ -66,5 +70,36 @@ public class CustomerController {
         return ResponseEntity.ok(resultFlux);
     }
 
+
+    @PostMapping("/loan/request")
+    public ResponseEntity<Response<String>> requestLoan(@Valid @RequestBody LoanRequestDTO loanRequest) {
+
+        int requestId = customerService.requestLoan(loanRequest);
+
+        Response<String> response = Response.<String>builder()
+                .status(ResponseStatus.SUCCESS)
+                .message("Loan request submitted successfully")
+                .data("kindly check your mail for updates. use this request id for future reference : " + requestId)
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    /// ///////////////// QUERY SERVICE /////////////
+
+    @GetMapping("/loan/status")
+    public ResponseEntity<Response<LoanRequestStatus>> checkLoanStatus(){
+        LoanRequestStatus status =  customerService.checkLoanStatus();
+
+
+        Response<LoanRequestStatus> response = Response.<LoanRequestStatus>builder()
+                .status(ResponseStatus.SUCCESS)
+                .message("Loan status fetched successfully")
+                .data(status)
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
 
 }
