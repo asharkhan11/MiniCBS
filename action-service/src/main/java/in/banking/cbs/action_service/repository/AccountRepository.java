@@ -12,16 +12,10 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 
 
     Optional<Account> findByAccountNumber(String accountNumber);
-<<<<<<< Updated upstream
 
     Optional<Account> findByCustomerId(int customerId);
 
     boolean existsByAccountNumber(String toAccountNumber);
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
 
     Optional<Account> findByCustomerIdAndAccountType(int customerId, AccountType accountType);
->>>>>>> 8b7b261b9879a62986cef2e5a579c5fabb9ef621
 }
