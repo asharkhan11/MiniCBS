@@ -175,6 +175,4 @@ public class AuthService {
         otpResolverRepository.delete(otpResolver);
 
     }
-
-
 }
