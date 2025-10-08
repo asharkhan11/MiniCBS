@@ -111,4 +111,17 @@ public class EmployeeController {
                 .build();
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Response<Employee>> getEmployeeByEmail(@PathVariable String email) {
+        Employee employee = employeeService.getEmployeeByEmail(email);
+
+        Response<Employee> response = Response.<Employee>builder()
+                .status(ResponseStatus.FOUND)
+                .message("Employee retrieved successfully by email")
+                .data(employee)
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
 }

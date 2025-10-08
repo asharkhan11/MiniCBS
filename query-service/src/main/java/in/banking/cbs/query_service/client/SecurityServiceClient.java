@@ -4,6 +4,7 @@ import in.banking.cbs.query_service.DTO.Credential;
 import in.banking.cbs.query_service.DTO.LoginResponse;
 import in.banking.cbs.query_service.DTO.Roles;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,4 +32,10 @@ public interface SecurityServiceClient {
 
     @DeleteMapping("/credential/ids")
     void deleteAllCredentialsByIds(@RequestBody List<Integer> credentialIds);
+
+    @GetMapping("/credential/email/{email}")
+    Credential getCredentialByEmail(@PathVariable String email);
+
+    @PostMapping("/credential/password/match")
+    boolean matchPassword(@RequestParam String rawPassword, @RequestParam String encodedPassword);
 }

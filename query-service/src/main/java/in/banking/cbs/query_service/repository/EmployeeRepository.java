@@ -8,13 +8,16 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
-    
+
     List<Employee> findAllByBranchIn(List<Branch> branches);
 
     List<Employee> findAllByBranch(Branch branch);
+
+    Optional<Employee> findByCredentialId(int credentialId);
 
     List<Employee> findByFirstName(String firstName);
 

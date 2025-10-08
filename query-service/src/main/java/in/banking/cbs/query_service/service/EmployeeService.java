@@ -1,5 +1,7 @@
 package in.banking.cbs.query_service.service;
 
+import in.banking.cbs.query_service.DTO.Credential;
+import in.banking.cbs.query_service.client.SecurityServiceClient;
 import in.banking.cbs.query_service.entity.Branch;
 import in.banking.cbs.query_service.entity.Employee;
 import in.banking.cbs.query_service.exception.NotFoundException;
@@ -16,6 +18,7 @@ import java.util.List;
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final SecurityServiceClient securityServiceClient;
 
     public Employee getEmployeeById(int employeeId) {
         return employeeRepository.findById(employeeId)
@@ -48,5 +51,18 @@ public class EmployeeService {
 
     public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
+    }
+
+    public Employee getEmployeeByEmail(String email) {
+        Credential credentialByEmail = securityServiceClient.getCredentialByEmail(email);
+        if (credentialByEmail == null){
+            throw new NotFoundException("No credential found for email: " + email);
+        }
+
+        int credentialId = credentialByEmail.getCredentialId();
+        Employee employee = employeeRepository.findByCredentialId(credentialId)
+                .orElseThrow(() -> new NotFoundException("No Employee found with credential id: " + credentialId));
+
+        return employee;
     }
 }
